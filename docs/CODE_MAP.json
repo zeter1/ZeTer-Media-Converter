@@ -1,0 +1,5896 @@
+{
+  "schema_version": 2,
+  "entrypoint": "ZeTer Media Converter.py",
+  "package": "videovaudio",
+  "module_count": 40,
+  "method_count_all_classes": 161,
+  "unique_method_owner_count": 158,
+  "duplicate_non_dunder_method_names": {},
+  "modules": {
+    "videovaudio/__init__.py": {
+      "loc": 5,
+      "summary": "ZeTer Media Converter application package.",
+      "classes": [],
+      "phase_anchors": []
+    },
+    "videovaudio/app.py": {
+      "loc": 147,
+      "summary": "Application composition root.",
+      "classes": [
+        {
+          "name": "VideoToAudioConverter",
+          "line_start": 25,
+          "line_end": 147,
+          "doc": "",
+          "methods": [
+            {
+              "name": "__init__",
+              "class": "VideoToAudioConverter",
+              "line_start": 84,
+              "line_end": 147,
+              "loc": 64,
+              "doc": "",
+              "calls": [
+                "create_interface",
+                "install_exception_hooks",
+                "setup_logging",
+                "write_problem"
+              ],
+              "called_by": [],
+              "module": "videovaudio/app.py"
+            }
+          ]
+        }
+      ],
+      "phase_anchors": []
+    },
+    "videovaudio/audio/__init__.py": {
+      "loc": 18,
+      "summary": "Audio feature package.",
+      "classes": [
+        {
+          "name": "AudioMixin",
+          "line_start": 12,
+          "line_end": 15,
+          "doc": "Composition-only aggregate; contains no feature behavior itself.",
+          "methods": []
+        }
+      ],
+      "phase_anchors": []
+    },
+    "videovaudio/audio/file_conversion.py": {
+      "loc": 506,
+      "summary": "Single-video -> MP3 conversion, fallback and validation.",
+      "classes": [
+        {
+          "name": "AudioFileConversionMixin",
+          "line_start": 19,
+          "line_end": 506,
+          "doc": "",
+          "methods": [
+            {
+              "name": "convert_single_file",
+              "class": "AudioFileConversionMixin",
+              "line_start": 20,
+              "line_end": 506,
+              "loc": 487,
+              "doc": "Многопоточная конвертация одного видео с честной диагностикой ffmpeg.",
+              "calls": [
+                "build_output_path",
+                "command_to_text",
+                "diagnose_ffmpeg_failure",
+                "duration_mismatch",
+                "ffmpeg_base_command",
+                "get_audio_info",
+                "mark_problem_recovered",
+                "mark_problem_unresolved",
+                "path_facts",
+                "run_process",
+                "write_problem"
+              ],
+              "called_by": [],
+              "module": "videovaudio/audio/file_conversion.py"
+            }
+          ]
+        }
+      ],
+      "phase_anchors": [
+        {
+          "line": 37,
+          "label": "CODEX-PHASE A1",
+          "description": "build the primary/fallback FFmpeg command."
+        },
+        {
+          "line": 68,
+          "label": "CODEX-PHASE A2",
+          "description": "run the primary MP3 conversion attempt."
+        },
+        {
+          "line": 83,
+          "label": "CODEX-PHASE A3",
+          "description": "classify failure and execute the libmp3lame compatibility fallback when applicable."
+        },
+        {
+          "line": 249,
+          "label": "CODEX-PHASE A4",
+          "description": "validate staged audio before publishing the per-video MP3."
+        },
+        {
+          "line": 470,
+          "label": "CODEX-PHASE A5",
+          "description": "terminal invalid/missing output handling."
+        }
+      ]
+    },
+    "videovaudio/audio/folder_workflow.py": {
+      "loc": 988,
+      "summary": "End-to-end workflow for one audio-course folder.",
+      "classes": [
+        {
+          "name": "AudioFolderWorkflowMixin",
+          "line_start": 62,
+          "line_end": 988,
+          "doc": "",
+          "methods": [
+            {
+              "name": "process_single_folder",
+              "class": "AudioFolderWorkflowMixin",
+              "line_start": 63,
+              "line_end": 988,
+              "loc": 926,
+              "doc": "Обработка одной папки. Успех возвращается только если все этапы реально выполнены.",
+              "calls": [
+                "audio_profile_key",
+                "audio_profile_matches_target",
+                "build_audio_split_output_path",
+                "command_to_text",
+                "duration_mismatch",
+                "escape_concat_path",
+                "expected_audio_profile",
+                "ffmpeg_base_command",
+                "format_duration",
+                "get_audio_info",
+                "log_message",
+                "mark_problem_recovered",
+                "mark_problem_unresolved",
+                "normalize_folder_path",
+                "normalize_returncode",
+                "now_iso",
+                "path_facts",
+                "run_process",
+                "save_concat_input_manifest",
+                "scan_media_files",
+                "set_status",
+                "split_file",
+                "trim_text",
+                "ui_after",
+                "update_active_state",
+                "update_progress",
+                "write_problem"
+              ],
+              "called_by": [
+                "process_queue"
+              ],
+              "module": "videovaudio/audio/folder_workflow.py"
+            }
+          ]
+        }
+      ],
+      "phase_anchors": [
+        {
+          "line": 97,
+          "label": "CODEX-PHASE F1",
+          "description": "initialize folder state, UI and summary."
+        },
+        {
+          "line": 139,
+          "label": "CODEX-PHASE F2",
+          "description": "scan/validate source media before creating outputs."
+        },
+        {
+          "line": 215,
+          "label": "CODEX-PHASE F3",
+          "description": "prepare directories and preserve previous outputs."
+        },
+        {
+          "line": 255,
+          "label": "CODEX-PHASE F4",
+          "description": "parallel per-video conversion and progress collection."
+        },
+        {
+          "line": 433,
+          "label": "CODEX-PHASE F5",
+          "description": "aggregate conversion metrics and validate MP3 profiles/skips."
+        },
+        {
+          "line": 512,
+          "label": "CODEX-PHASE F6",
+          "description": "concatenate all valid MP3 files; fallback to transcode if copy fails."
+        },
+        {
+          "line": 636,
+          "label": "CODEX-PHASE F7",
+          "description": "verify concat duration and repair timeline mismatch if needed."
+        },
+        {
+          "line": 884,
+          "label": "CODEX-PHASE F8",
+          "description": "split validated full audio into <=10-hour final parts."
+        },
+        {
+          "line": 956,
+          "label": "CODEX-PHASE F9",
+          "description": "unconditional temp cleanup and final active-state update."
+        }
+      ]
+    },
+    "videovaudio/audio/probe.py": {
+      "loc": 148,
+      "summary": "FFprobe parsing and audio metadata helpers.",
+      "classes": [
+        {
+          "name": "AudioProbeMixin",
+          "line_start": 15,
+          "line_end": 148,
+          "doc": "",
+          "methods": [
+            {
+              "name": "extract_ffprobe_json",
+              "class": "AudioProbeMixin",
+              "line_start": 16,
+              "line_end": 31,
+              "loc": 16,
+              "doc": "Извлекает JSON ffprobe из process-log с добавленным служебным заголовком.",
+              "calls": [],
+              "called_by": [
+                "get_audio_info",
+                "get_video_info"
+              ],
+              "module": "videovaudio/audio/probe.py"
+            },
+            {
+              "name": "get_audio_info",
+              "class": "AudioProbeMixin",
+              "line_start": 33,
+              "line_end": 139,
+              "loc": 107,
+              "doc": "Возвращает длительность и фактический аудиопрофиль через один вызов ffprobe.",
+              "calls": [
+                "command_to_text",
+                "extract_ffprobe_json",
+                "run_process",
+                "trim_text",
+                "write_problem"
+              ],
+              "called_by": [
+                "convert_single_file",
+                "get_duration",
+                "process_single_folder"
+              ],
+              "module": "videovaudio/audio/probe.py"
+            },
+            {
+              "name": "get_duration",
+              "class": "AudioProbeMixin",
+              "line_start": 141,
+              "line_end": 143,
+              "loc": 3,
+              "doc": "Возвращает длительность файла через ffprobe и логирует реальные причины ошибок.",
+              "calls": [
+                "get_audio_info"
+              ],
+              "called_by": [
+                "_split_file_into_stage"
+              ],
+              "module": "videovaudio/audio/probe.py"
+            },
+            {
+              "name": "format_duration",
+              "class": "AudioProbeMixin",
+              "line_start": 145,
+              "line_end": 148,
+              "loc": 4,
+              "doc": "",
+              "calls": [],
+              "called_by": [
+                "_split_file_into_stage",
+                "process_single_folder",
+                "process_video_folder"
+              ],
+              "module": "videovaudio/audio/probe.py"
+            }
+          ]
+        }
+      ],
+      "phase_anchors": []
+    },
+    "videovaudio/audio/split.py": {
+      "loc": 715,
+      "summary": "Split a full MP3 into validated <=10-hour outputs.",
+      "classes": [
+        {
+          "name": "AudioSplitMixin",
+          "line_start": 16,
+          "line_end": 715,
+          "doc": "",
+          "methods": [
+            {
+              "name": "split_file",
+              "class": "AudioSplitMixin",
+              "line_start": 17,
+              "line_end": 91,
+              "loc": 75,
+              "doc": "Проверяет полный набор временных частей и затем публикует без перезаписи.",
+              "calls": [
+                "_split_file_into_stage",
+                "write_problem"
+              ],
+              "called_by": [
+                "process_single_folder"
+              ],
+              "module": "videovaudio/audio/split.py"
+            },
+            {
+              "name": "_split_file_into_stage",
+              "class": "AudioSplitMixin",
+              "line_start": 93,
+              "line_end": 715,
+              "loc": 623,
+              "doc": "Точная разбивка ≤10 часов. Возвращает True только если все части созданы.",
+              "calls": [
+                "build_audio_split_output_path",
+                "command_to_text",
+                "duration_mismatch",
+                "ffmpeg_base_command",
+                "format_duration",
+                "get_duration",
+                "log_message",
+                "mark_problem_recovered",
+                "mark_problem_unresolved",
+                "run_process",
+                "trim_text",
+                "update_progress",
+                "write_problem"
+              ],
+              "called_by": [
+                "split_file"
+              ],
+              "module": "videovaudio/audio/split.py"
+            }
+          ]
+        }
+      ],
+      "phase_anchors": [
+        {
+          "line": 98,
+          "label": "CODEX-PHASE S1",
+          "description": "establish duration contract and target part length."
+        },
+        {
+          "line": 156,
+          "label": "CODEX-PHASE S2",
+          "description": "create each part with copy-first / transcode-fallback logic."
+        },
+        {
+          "line": 620,
+          "label": "CODEX-PHASE S3",
+          "description": "verify that at least one part was produced."
+        },
+        {
+          "line": 631,
+          "label": "CODEX-PHASE S4",
+          "description": "validate total duration across all generated parts."
+        },
+        {
+          "line": 686,
+          "label": "CODEX-PHASE S5",
+          "description": "publish successful split validation summary."
+        }
+      ]
+    },
+    "videovaudio/core/__init__.py": {
+      "loc": 17,
+      "summary": "Core feature package.",
+      "classes": [
+        {
+          "name": "CoreMixin",
+          "line_start": 11,
+          "line_end": 14,
+          "doc": "Composition-only aggregate; contains no feature behavior itself.",
+          "methods": []
+        }
+      ],
+      "phase_anchors": []
+    },
+    "videovaudio/core/audio_contract.py": {
+      "loc": 98,
+      "summary": "Audio invariants, duration tolerances and concat manifest helpers.",
+      "classes": [
+        {
+          "name": "AudioContractMixin",
+          "line_start": 13,
+          "line_end": 98,
+          "doc": "",
+          "methods": [
+            {
+              "name": "duration_mismatch",
+              "class": "AudioContractMixin",
+              "line_start": 14,
+              "line_end": 24,
+              "loc": 11,
+              "doc": "Возвращает предел и величину недопустимого расхождения длительностей.",
+              "calls": [],
+              "called_by": [
+                "_split_file_into_stage",
+                "convert_single_file",
+                "process_single_folder",
+                "split_long_video_to_outputs",
+                "validate_merged_video"
+              ],
+              "module": "videovaudio/core/audio_contract.py"
+            },
+            {
+              "name": "expected_audio_profile",
+              "class": "AudioContractMixin",
+              "line_start": 26,
+              "line_end": 33,
+              "loc": 8,
+              "doc": "Единый профиль MP3, обязательный для безопасной concat-склейки.",
+              "calls": [],
+              "called_by": [
+                "process_single_folder"
+              ],
+              "module": "videovaudio/core/audio_contract.py"
+            },
+            {
+              "name": "audio_profile_key",
+              "class": "AudioContractMixin",
+              "line_start": 35,
+              "line_end": 41,
+              "loc": 7,
+              "doc": "Компактный ключ аудиопрофиля для JSON-сводки.",
+              "calls": [],
+              "called_by": [
+                "process_single_folder"
+              ],
+              "module": "videovaudio/core/audio_contract.py"
+            },
+            {
+              "name": "audio_profile_matches_target",
+              "class": "AudioContractMixin",
+              "line_start": 43,
+              "line_end": 50,
+              "loc": 8,
+              "doc": "Проверяет важные для concat параметры фактически созданного MP3.",
+              "calls": [],
+              "called_by": [
+                "process_single_folder"
+              ],
+              "module": "videovaudio/core/audio_contract.py"
+            },
+            {
+              "name": "save_concat_input_manifest",
+              "class": "AudioContractMixin",
+              "line_start": 52,
+              "line_end": 98,
+              "loc": 47,
+              "doc": "Сохраняет полный компактный порядок MP3 только при проблеме склейки.",
+              "calls": [
+                "atomic_write_json",
+                "safe_log_fragment"
+              ],
+              "called_by": [
+                "process_single_folder"
+              ],
+              "module": "videovaudio/core/audio_contract.py"
+            }
+          ]
+        }
+      ],
+      "phase_anchors": []
+    },
+    "videovaudio/core/ffmpeg.py": {
+      "loc": 318,
+      "summary": "Shared FFmpeg command helpers and failure classification.",
+      "classes": [
+        {
+          "name": "FFmpegUtilsMixin",
+          "line_start": 13,
+          "line_end": 318,
+          "doc": "",
+          "methods": [
+            {
+              "name": "trim_text",
+              "class": "FFmpegUtilsMixin",
+              "line_start": 14,
+              "line_end": 24,
+              "loc": 11,
+              "doc": "Обрезает длинный текст, сохраняя важное начало или окончание.",
+              "calls": [],
+              "called_by": [
+                "_split_file_into_stage",
+                "diagnostic_excerpt",
+                "get_audio_info",
+                "process_single_folder",
+                "record_diagnostic_failure",
+                "sanitize_problem_value",
+                "write_problem"
+              ],
+              "module": "videovaudio/core/ffmpeg.py"
+            },
+            {
+              "name": "diagnostic_excerpt",
+              "class": "FFmpegUtilsMixin",
+              "line_start": 26,
+              "line_end": 71,
+              "loc": 46,
+              "doc": "Убирает из вывода FFmpeg повторяющийся служебный шум и оставляет причину.",
+              "calls": [
+                "trim_text"
+              ],
+              "called_by": [
+                "sanitize_problem_value"
+              ],
+              "module": "videovaudio/core/ffmpeg.py"
+            },
+            {
+              "name": "normalize_returncode",
+              "class": "FFmpegUtilsMixin",
+              "line_start": 73,
+              "line_end": 77,
+              "loc": 5,
+              "doc": "Преобразует беззнаковый Windows-код FFmpeg в обычное отрицательное число.",
+              "calls": [],
+              "called_by": [
+                "process_single_folder",
+                "run_process",
+                "write_problem"
+              ],
+              "module": "videovaudio/core/ffmpeg.py"
+            },
+            {
+              "name": "ensure_windows_child_error_mode",
+              "class": "FFmpegUtilsMixin",
+              "line_start": 79,
+              "line_end": 105,
+              "loc": 27,
+              "doc": "Не даёт Windows Error Reporting удерживать упавшие FFmpeg и их файлы.",
+              "calls": [],
+              "called_by": [
+                "run_process"
+              ],
+              "module": "videovaudio/core/ffmpeg.py"
+            },
+            {
+              "name": "is_libmp3lame_joint_stereo_assertion",
+              "class": "FFmpegUtilsMixin",
+              "line_start": 107,
+              "line_end": 116,
+              "loc": 10,
+              "doc": "Распознаёт фатальный assertion LAME, после которого процесс может зависнуть в Windows.",
+              "calls": [],
+              "called_by": [
+                "diagnose_ffmpeg_failure",
+                "run_process"
+              ],
+              "module": "videovaudio/core/ffmpeg.py"
+            },
+            {
+              "name": "diagnose_ffmpeg_failure",
+              "class": "FFmpegUtilsMixin",
+              "line_start": 118,
+              "line_end": 283,
+              "loc": 166,
+              "doc": "Классифицирует типовые причины FFmpeg и даёт Codex направление исправления.",
+              "calls": [
+                "is_libmp3lame_joint_stereo_assertion",
+                "path_facts"
+              ],
+              "called_by": [
+                "convert_single_file"
+              ],
+              "module": "videovaudio/core/ffmpeg.py"
+            },
+            {
+              "name": "ffmpeg_base_command",
+              "class": "FFmpegUtilsMixin",
+              "line_start": 285,
+              "line_end": 292,
+              "loc": 8,
+              "doc": "Базовые параметры FFmpeg без баннера, прогресса и многомегабайтного шума.",
+              "calls": [],
+              "called_by": [
+                "_split_file_into_stage",
+                "build_video_normalize_command",
+                "concat_video_files_copy",
+                "convert_single_file",
+                "process_single_folder"
+              ],
+              "module": "videovaudio/core/ffmpeg.py"
+            },
+            {
+              "name": "extract_duration_seconds",
+              "class": "FFmpegUtilsMixin",
+              "line_start": 294,
+              "line_end": 307,
+              "loc": 14,
+              "doc": "Достаёт числовую длительность из вывода ffprobe, даже если вывод лежит в process-log.",
+              "calls": [],
+              "called_by": [],
+              "module": "videovaudio/core/ffmpeg.py"
+            },
+            {
+              "name": "command_to_text",
+              "class": "FFmpegUtilsMixin",
+              "line_start": 309,
+              "line_end": 318,
+              "loc": 10,
+              "doc": "Пишет команду ffmpeg/ffprobe в понятном виде без запуска через shell.",
+              "calls": [],
+              "called_by": [
+                "_split_file_into_stage",
+                "convert_single_file",
+                "get_audio_info",
+                "process_single_folder",
+                "run_process",
+                "write_problem"
+              ],
+              "module": "videovaudio/core/ffmpeg.py"
+            }
+          ]
+        }
+      ],
+      "phase_anchors": []
+    },
+    "videovaudio/core/paths.py": {
+      "loc": 122,
+      "summary": "Path normalization, output naming and filesystem-facing helpers.",
+      "classes": [
+        {
+          "name": "PathUtilsMixin",
+          "line_start": 13,
+          "line_end": 122,
+          "doc": "",
+          "methods": [
+            {
+              "name": "path_facts",
+              "class": "PathUtilsMixin",
+              "line_start": 14,
+              "line_end": 42,
+              "loc": 29,
+              "doc": "Компактные факты о пути, полезные при ошибках доступа и длинных путях.",
+              "calls": [],
+              "called_by": [
+                "convert_single_file",
+                "diagnose_ffmpeg_failure",
+                "process_single_folder"
+              ],
+              "module": "videovaudio/core/paths.py"
+            },
+            {
+              "name": "build_output_path",
+              "class": "PathUtilsMixin",
+              "line_start": 44,
+              "line_end": 53,
+              "loc": 10,
+              "doc": "Формирует понятное имя результата, но не превышает безопасную длину пути.",
+              "calls": [
+                "safe_output_stem"
+              ],
+              "called_by": [
+                "build_audio_split_output_path",
+                "convert_single_file"
+              ],
+              "module": "videovaudio/core/paths.py"
+            },
+            {
+              "name": "build_audio_split_output_path",
+              "class": "PathUtilsMixin",
+              "line_start": 55,
+              "line_end": 73,
+              "loc": 19,
+              "doc": "Именует одиночный MP3 по курсу, а набор — пронумерованными частями.",
+              "calls": [
+                "build_output_path",
+                "safe_output_stem"
+              ],
+              "called_by": [
+                "_split_file_into_stage",
+                "process_single_folder"
+              ],
+              "module": "videovaudio/core/paths.py"
+            },
+            {
+              "name": "read_text_tail",
+              "class": "PathUtilsMixin",
+              "line_start": 75,
+              "line_end": 92,
+              "loc": 18,
+              "doc": "Читает хвост большого лога процесса без риска загрузить гигабайтный файл.",
+              "calls": [],
+              "called_by": [
+                "run_process"
+              ],
+              "module": "videovaudio/core/paths.py"
+            },
+            {
+              "name": "safe_log_fragment",
+              "class": "PathUtilsMixin",
+              "line_start": 94,
+              "line_end": 100,
+              "loc": 7,
+              "doc": "Безопасный фрагмент имени файла для логов ffmpeg/ffprobe.",
+              "calls": [],
+              "called_by": [
+                "concat_video_files_copy",
+                "make_process_log_path",
+                "process_video_folder",
+                "save_concat_input_manifest"
+              ],
+              "module": "videovaudio/core/paths.py"
+            },
+            {
+              "name": "safe_output_stem",
+              "class": "PathUtilsMixin",
+              "line_start": 102,
+              "line_end": 109,
+              "loc": 8,
+              "doc": "Безопасное имя MP3 без слишком длинных путей Windows.",
+              "calls": [],
+              "called_by": [
+                "build_audio_split_output_path",
+                "build_output_path"
+              ],
+              "module": "videovaudio/core/paths.py"
+            },
+            {
+              "name": "normalize_folder_key",
+              "class": "PathUtilsMixin",
+              "line_start": 111,
+              "line_end": 113,
+              "loc": 3,
+              "doc": "Ключ для сравнения путей очереди без дублей вида C:\\A и c:\\a\\.",
+              "calls": [],
+              "called_by": [
+                "_add_folder_to_queue",
+                "_remove_duplicates",
+                "process_queue",
+                "process_video_queue"
+              ],
+              "module": "videovaudio/core/paths.py"
+            },
+            {
+              "name": "normalize_folder_path",
+              "class": "PathUtilsMixin",
+              "line_start": 115,
+              "line_end": 117,
+              "loc": 3,
+              "doc": "Возвращает единый абсолютный Windows-путь для очереди и логов.",
+              "calls": [],
+              "called_by": [
+                "_add_folder_to_queue",
+                "process_single_folder",
+                "process_video_folder",
+                "scan_media_files"
+              ],
+              "module": "videovaudio/core/paths.py"
+            },
+            {
+              "name": "escape_concat_path",
+              "class": "PathUtilsMixin",
+              "line_start": 119,
+              "line_end": 122,
+              "loc": 4,
+              "doc": "Экранирует путь для ffmpeg concat demuxer.",
+              "calls": [],
+              "called_by": [
+                "concat_video_files_copy",
+                "process_single_folder"
+              ],
+              "module": "videovaudio/core/paths.py"
+            }
+          ]
+        }
+      ],
+      "phase_anchors": []
+    },
+    "videovaudio/diagnostics/__init__.py": {
+      "loc": 23,
+      "summary": "Diagnostics feature package.",
+      "classes": [
+        {
+          "name": "DiagnosticsMixin",
+          "line_start": 17,
+          "line_end": 20,
+          "doc": "Composition-only aggregate; contains no feature behavior itself.",
+          "methods": []
+        }
+      ],
+      "phase_anchors": []
+    },
+    "videovaudio/diagnostics/codex_report.py": {
+      "loc": 315,
+      "summary": "Codex-focused prioritization and improvement report.",
+      "classes": [
+        {
+          "name": "CodexReportMixin",
+          "line_start": 15,
+          "line_end": 315,
+          "doc": "",
+          "methods": [
+            {
+              "name": "diagnostic_status_counts",
+              "class": "CodexReportMixin",
+              "line_start": 16,
+              "line_end": 29,
+              "loc": 14,
+              "doc": "Считает восстановленные, ожидаемые и нерешённые события.",
+              "calls": [],
+              "called_by": [
+                "build_health_record",
+                "diagnostics_integrity",
+                "run_index_payload",
+                "save_run_summary"
+              ],
+              "module": "videovaudio/diagnostics/codex_report.py"
+            },
+            {
+              "name": "compact_event_for_report",
+              "class": "CodexReportMixin",
+              "line_start": 31,
+              "line_end": 62,
+              "loc": 32,
+              "doc": "Оставляет в Codex-отчёте только поля, нужные для приоритизации.",
+              "calls": [],
+              "called_by": [
+                "build_codex_report"
+              ],
+              "module": "videovaudio/diagnostics/codex_report.py"
+            },
+            {
+              "name": "build_codex_report",
+              "class": "CodexReportMixin",
+              "line_start": 64,
+              "line_end": 315,
+              "loc": 252,
+              "doc": "Формирует конкретный порядок анализа, а не общий список советов.",
+              "calls": [
+                "compact_event_for_report",
+                "diagnostic_health_snapshot",
+                "read_recent_health_records"
+              ],
+              "called_by": [
+                "save_run_summary"
+              ],
+              "module": "videovaudio/diagnostics/codex_report.py"
+            }
+          ]
+        }
+      ],
+      "phase_anchors": []
+    },
+    "videovaudio/diagnostics/common.py": {
+      "loc": 40,
+      "summary": "Time and source hashing helpers shared by diagnostics/runtime identity.",
+      "classes": [
+        {
+          "name": "DiagnosticsCommonMixin",
+          "line_start": 22,
+          "line_end": 40,
+          "doc": "",
+          "methods": [
+            {
+              "name": "now_iso",
+              "class": "DiagnosticsCommonMixin",
+              "line_start": 23,
+              "line_end": 25,
+              "loc": 3,
+              "doc": "Локальное время с часовым поясом для сопоставления разных компьютеров.",
+              "calls": [],
+              "called_by": [
+                "begin_run_diagnostics",
+                "build_health_record",
+                "finish_active_run",
+                "install_exception_hooks",
+                "on_close",
+                "process_queue",
+                "process_single_folder",
+                "process_video_folder",
+                "process_video_queue",
+                "record_diagnostic_failure",
+                "run_index_payload",
+                "run_process",
+                "setup_logging",
+                "update_active_state",
+                "write_problem"
+              ],
+              "module": "videovaudio/diagnostics/common.py"
+            },
+            {
+              "name": "utc_now_iso",
+              "class": "DiagnosticsCommonMixin",
+              "line_start": 27,
+              "line_end": 29,
+              "loc": 3,
+              "doc": "UTC-время события для машинной сортировки.",
+              "calls": [],
+              "called_by": [
+                "begin_run_diagnostics",
+                "finish_active_run",
+                "on_close",
+                "run_index_payload",
+                "setup_logging",
+                "update_active_state",
+                "write_problem"
+              ],
+              "module": "videovaudio/diagnostics/common.py"
+            },
+            {
+              "name": "sha256_file",
+              "class": "DiagnosticsCommonMixin",
+              "line_start": 31,
+              "line_end": 40,
+              "loc": 10,
+              "doc": "Потоково вычисляет отпечаток программы без загрузки файла целиком.",
+              "calls": [],
+              "called_by": [
+                "get_source_identity"
+              ],
+              "module": "videovaudio/diagnostics/common.py"
+            }
+          ]
+        }
+      ],
+      "phase_anchors": []
+    },
+    "videovaudio/diagnostics/events.py": {
+      "loc": 428,
+      "summary": "Structured problem events, deduplication and recovery linkage.",
+      "classes": [
+        {
+          "name": "ProblemEventsMixin",
+          "line_start": 22,
+          "line_end": 428,
+          "doc": "",
+          "methods": [
+            {
+              "name": "problem_guidance",
+              "class": "ProblemEventsMixin",
+              "line_start": 23,
+              "line_end": 81,
+              "loc": 59,
+              "doc": "Единые пояснения, чтобы Codex видел влияние и следующий шаг.",
+              "calls": [],
+              "called_by": [
+                "write_problem"
+              ],
+              "module": "videovaudio/diagnostics/events.py"
+            },
+            {
+              "name": "sanitize_problem_value",
+              "class": "ProblemEventsMixin",
+              "line_start": 83,
+              "line_end": 128,
+              "loc": 46,
+              "doc": "Не даёт одной ошибке раздуть JSONL до мегабайт.",
+              "calls": [
+                "diagnostic_excerpt",
+                "sanitize_problem_value",
+                "trim_text"
+              ],
+              "called_by": [
+                "sanitize_problem_value",
+                "write_problem"
+              ],
+              "module": "videovaudio/diagnostics/events.py"
+            },
+            {
+              "name": "error_signature",
+              "class": "ProblemEventsMixin",
+              "line_start": 130,
+              "line_end": 164,
+              "loc": 35,
+              "doc": "Стабильная сигнатура группирует одинаковые сбои без привязки к путям.",
+              "calls": [],
+              "called_by": [
+                "write_problem"
+              ],
+              "module": "videovaudio/diagnostics/events.py"
+            },
+            {
+              "name": "default_resolution_status",
+              "class": "ProblemEventsMixin",
+              "line_start": 166,
+              "line_end": 178,
+              "loc": 13,
+              "doc": "Отделяет реальные дефекты программы от ожидаемых пропусков и повторов.",
+              "calls": [],
+              "called_by": [
+                "write_problem"
+              ],
+              "module": "videovaudio/diagnostics/events.py"
+            },
+            {
+              "name": "write_problem",
+              "class": "ProblemEventsMixin",
+              "line_start": 180,
+              "line_end": 396,
+              "loc": 217,
+              "doc": "Записывает структурированное событие, дедуплицирует повторы и возвращает event_id.",
+              "calls": [
+                "command_to_text",
+                "default_resolution_status",
+                "error_signature",
+                "normalize_returncode",
+                "now_iso",
+                "problem_guidance",
+                "record_diagnostic_failure",
+                "resource_snapshot",
+                "sanitize_problem_value",
+                "trim_text",
+                "utc_now_iso"
+              ],
+              "called_by": [
+                "__init__",
+                "_split_file_into_stage",
+                "convert_single_file",
+                "create_video_group_output",
+                "get_audio_info",
+                "get_video_info",
+                "install_exception_hooks",
+                "mark_problem_recovered",
+                "mark_problem_unresolved",
+                "normalize_video_file",
+                "process_queue",
+                "process_single_folder",
+                "process_video_folder",
+                "process_video_queue",
+                "run_process",
+                "save_run_summary",
+                "scan_media_files",
+                "setup_logging",
+                "split_file",
+                "split_long_video_to_outputs",
+                "start",
+                "start_video_merge"
+              ],
+              "module": "videovaudio/diagnostics/events.py"
+            },
+            {
+              "name": "mark_problem_recovered",
+              "class": "ProblemEventsMixin",
+              "line_start": 398,
+              "line_end": 412,
+              "loc": 15,
+              "doc": "Связывает исходную проблему с успешным результатом повторной попытки.",
+              "calls": [
+                "write_problem"
+              ],
+              "called_by": [
+                "_split_file_into_stage",
+                "convert_single_file",
+                "create_video_group_output",
+                "process_single_folder"
+              ],
+              "module": "videovaudio/diagnostics/events.py"
+            },
+            {
+              "name": "mark_problem_unresolved",
+              "class": "ProblemEventsMixin",
+              "line_start": 414,
+              "line_end": 428,
+              "loc": 15,
+              "doc": "Фиксирует неуспешное восстановление с привязкой к исходному событию.",
+              "calls": [
+                "write_problem"
+              ],
+              "called_by": [
+                "_split_file_into_stage",
+                "convert_single_file",
+                "create_video_group_output",
+                "process_single_folder"
+              ],
+              "module": "videovaudio/diagnostics/events.py"
+            }
+          ]
+        }
+      ],
+      "phase_anchors": []
+    },
+    "videovaudio/diagnostics/health.py": {
+      "loc": 172,
+      "summary": "Compact cross-run health history and regression baseline.",
+      "classes": [
+        {
+          "name": "DiagnosticsHealthHistoryMixin",
+          "line_start": 15,
+          "line_end": 172,
+          "doc": "",
+          "methods": [
+            {
+              "name": "read_recent_health_records",
+              "class": "DiagnosticsHealthHistoryMixin",
+              "line_start": 16,
+              "line_end": 35,
+              "loc": 20,
+              "doc": "Читает небольшой хвост истории качества без загрузки лишних данных.",
+              "calls": [],
+              "called_by": [
+                "append_health_record",
+                "build_codex_report"
+              ],
+              "module": "videovaudio/diagnostics/health.py"
+            },
+            {
+              "name": "build_health_record",
+              "class": "DiagnosticsHealthHistoryMixin",
+              "line_start": 37,
+              "line_end": 148,
+              "loc": 112,
+              "doc": "Одна компактная строка на запуск для поиска регрессий.",
+              "calls": [
+                "diagnostic_status_counts",
+                "get_log_storage_stats",
+                "now_iso"
+              ],
+              "called_by": [
+                "save_run_summary"
+              ],
+              "module": "videovaudio/diagnostics/health.py"
+            },
+            {
+              "name": "append_health_record",
+              "class": "DiagnosticsHealthHistoryMixin",
+              "line_start": 150,
+              "line_end": 172,
+              "loc": 23,
+              "doc": "Хранит до 120 дней компактной истории качества.",
+              "calls": [
+                "atomic_write_text",
+                "read_recent_health_records"
+              ],
+              "called_by": [
+                "save_run_summary"
+              ],
+              "module": "videovaudio/diagnostics/health.py"
+            }
+          ]
+        }
+      ],
+      "phase_anchors": []
+    },
+    "videovaudio/diagnostics/integrity.py": {
+      "loc": 243,
+      "summary": "Structural and semantic consistency checks for diagnostic artifacts.",
+      "classes": [
+        {
+          "name": "DiagnosticsIntegrityMixin",
+          "line_start": 15,
+          "line_end": 243,
+          "doc": "",
+          "methods": [
+            {
+              "name": "diagnostics_integrity",
+              "class": "DiagnosticsIntegrityMixin",
+              "line_start": 16,
+              "line_end": 243,
+              "loc": 228,
+              "doc": "Проверяет синтаксис файлов и смысловую согласованность итогов.",
+              "calls": [
+                "diagnostic_health_snapshot",
+                "diagnostic_status_counts"
+              ],
+              "called_by": [
+                "save_run_summary"
+              ],
+              "module": "videovaudio/diagnostics/integrity.py"
+            }
+          ]
+        }
+      ],
+      "phase_anchors": []
+    },
+    "videovaudio/diagnostics/io_health.py": {
+      "loc": 155,
+      "summary": "Reliability monitoring for diagnostic files and atomic state writes.",
+      "classes": [
+        {
+          "name": "DiagnosticsIOHealthMixin",
+          "line_start": 22,
+          "line_end": 155,
+          "doc": "",
+          "methods": [
+            {
+              "name": "ensure_diagnostic_io_state",
+              "class": "DiagnosticsIOHealthMixin",
+              "line_start": 23,
+              "line_end": 32,
+              "loc": 10,
+              "doc": "Лениво создаёт блокировки и счётчики для служебной диагностики.",
+              "calls": [],
+              "called_by": [
+                "diagnostic_health_snapshot",
+                "record_diagnostic_failure",
+                "record_diagnostic_retry",
+                "reset_run_diagnostics",
+                "update_active_state"
+              ],
+              "module": "videovaudio/diagnostics/io_health.py"
+            },
+            {
+              "name": "active_state_temp_files",
+              "class": "DiagnosticsIOHealthMixin",
+              "line_start": 34,
+              "line_end": 58,
+              "loc": 25,
+              "doc": "Возвращает только временные файлы active_run_state этой программы.",
+              "calls": [],
+              "called_by": [
+                "diagnostic_health_snapshot"
+              ],
+              "module": "videovaudio/diagnostics/io_health.py"
+            },
+            {
+              "name": "record_diagnostic_failure",
+              "class": "DiagnosticsIOHealthMixin",
+              "line_start": 60,
+              "line_end": 110,
+              "loc": 51,
+              "doc": "Агрегирует сбои самой диагностики без рекурсивной записи в JSONL.",
+              "calls": [
+                "ensure_diagnostic_io_state",
+                "now_iso",
+                "trim_text"
+              ],
+              "called_by": [
+                "cleanup_own_atomic_temp",
+                "update_active_state",
+                "write_problem"
+              ],
+              "module": "videovaudio/diagnostics/io_health.py"
+            },
+            {
+              "name": "record_diagnostic_retry",
+              "class": "DiagnosticsIOHealthMixin",
+              "line_start": 112,
+              "line_end": 118,
+              "loc": 7,
+              "doc": "Считает успешные повторы атомарной замены без лишних строк лога.",
+              "calls": [
+                "ensure_diagnostic_io_state"
+              ],
+              "called_by": [
+                "update_active_state"
+              ],
+              "module": "videovaudio/diagnostics/io_health.py"
+            },
+            {
+              "name": "diagnostic_health_snapshot",
+              "class": "DiagnosticsIOHealthMixin",
+              "line_start": 120,
+              "line_end": 155,
+              "loc": 36,
+              "doc": "Формирует компактный итог надёжности служебных файлов запуска.",
+              "calls": [
+                "active_state_temp_files",
+                "ensure_diagnostic_io_state"
+              ],
+              "called_by": [
+                "build_codex_report",
+                "diagnostics_integrity",
+                "save_run_summary"
+              ],
+              "module": "videovaudio/diagnostics/io_health.py"
+            }
+          ]
+        }
+      ],
+      "phase_anchors": []
+    },
+    "videovaudio/diagnostics/lifecycle.py": {
+      "loc": 332,
+      "summary": "Active-run state, heartbeat, exception hooks and shutdown lifecycle.",
+      "classes": [
+        {
+          "name": "DiagnosticsLifecycleMixin",
+          "line_start": 22,
+          "line_end": 332,
+          "doc": "",
+          "methods": [
+            {
+              "name": "update_active_state",
+              "class": "DiagnosticsLifecycleMixin",
+              "line_start": 23,
+              "line_end": 96,
+              "loc": 74,
+              "doc": "Атомарно обновляет небольшой снимок выполняемой операции.",
+              "calls": [
+                "atomic_write_json",
+                "ensure_diagnostic_io_state",
+                "now_iso",
+                "record_diagnostic_failure",
+                "record_diagnostic_retry",
+                "utc_now_iso"
+              ],
+              "called_by": [
+                "finish_active_run",
+                "heartbeat_loop",
+                "install_exception_hooks",
+                "on_close",
+                "process_queue",
+                "process_single_folder",
+                "process_video_folder",
+                "process_video_queue",
+                "run_process",
+                "setup_logging"
+              ],
+              "module": "videovaudio/diagnostics/lifecycle.py"
+            },
+            {
+              "name": "heartbeat_loop",
+              "class": "DiagnosticsLifecycleMixin",
+              "line_start": 98,
+              "line_end": 104,
+              "loc": 7,
+              "doc": "Перезаписывает active_run_state.json, не создавая растущий лог.",
+              "calls": [
+                "sample_run_resources",
+                "update_active_state"
+              ],
+              "called_by": [],
+              "module": "videovaudio/diagnostics/lifecycle.py"
+            },
+            {
+              "name": "start_heartbeat",
+              "class": "DiagnosticsLifecycleMixin",
+              "line_start": 106,
+              "line_end": 119,
+              "loc": 14,
+              "doc": "Запускает один фоновый heartbeat на время очереди.",
+              "calls": [],
+              "called_by": [
+                "process_queue",
+                "process_video_queue"
+              ],
+              "module": "videovaudio/diagnostics/lifecycle.py"
+            },
+            {
+              "name": "stop_heartbeat",
+              "class": "DiagnosticsLifecycleMixin",
+              "line_start": 121,
+              "line_end": 132,
+              "loc": 12,
+              "doc": "Останавливает heartbeat до записи окончательного состояния.",
+              "calls": [],
+              "called_by": [
+                "finish_active_run",
+                "on_close"
+              ],
+              "module": "videovaudio/diagnostics/lifecycle.py"
+            },
+            {
+              "name": "clear_active_transient_state",
+              "class": "DiagnosticsLifecycleMixin",
+              "line_start": 134,
+              "line_end": 163,
+              "loc": 30,
+              "doc": "Убирает временные пути и PID после завершения, оставляя краткий итог.",
+              "calls": [],
+              "called_by": [
+                "finish_active_run",
+                "on_close"
+              ],
+              "module": "videovaudio/diagnostics/lifecycle.py"
+            },
+            {
+              "name": "finish_active_run",
+              "class": "DiagnosticsLifecycleMixin",
+              "line_start": 165,
+              "line_end": 176,
+              "loc": 12,
+              "doc": "Фиксирует терминальное состояние и останавливает heartbeat.",
+              "calls": [
+                "clear_active_transient_state",
+                "now_iso",
+                "stop_heartbeat",
+                "update_active_state",
+                "utc_now_iso"
+              ],
+              "called_by": [
+                "on_close",
+                "process_queue",
+                "process_video_queue"
+              ],
+              "module": "videovaudio/diagnostics/lifecycle.py"
+            },
+            {
+              "name": "install_exception_hooks",
+              "class": "DiagnosticsLifecycleMixin",
+              "line_start": 178,
+              "line_end": 271,
+              "loc": 94,
+              "doc": "Ловит необработанные ошибки главного, Tkinter и рабочих потоков.",
+              "calls": [
+                "now_iso",
+                "original_sys_excepthook",
+                "original_threading_excepthook",
+                "update_active_state",
+                "write_problem"
+              ],
+              "called_by": [
+                "__init__"
+              ],
+              "module": "videovaudio/diagnostics/lifecycle.py"
+            },
+            {
+              "name": "on_close",
+              "class": "DiagnosticsLifecycleMixin",
+              "line_start": 273,
+              "line_end": 332,
+              "loc": 60,
+              "doc": "Корректно помечает обычное закрытие, чтобы не спутать его с падением.",
+              "calls": [
+                "clear_active_transient_state",
+                "finish_active_run",
+                "now_iso",
+                "request_cancel",
+                "stop_heartbeat",
+                "terminate_active_processes",
+                "update_active_state",
+                "update_current_session",
+                "utc_now_iso"
+              ],
+              "called_by": [],
+              "module": "videovaudio/diagnostics/lifecycle.py"
+            }
+          ]
+        }
+      ],
+      "phase_anchors": []
+    },
+    "videovaudio/diagnostics/resources.py": {
+      "loc": 269,
+      "summary": "Resource sampling and aggregated run metrics.",
+      "classes": [
+        {
+          "name": "DiagnosticsResourcesMixin",
+          "line_start": 22,
+          "line_end": 269,
+          "doc": "",
+          "methods": [
+            {
+              "name": "system_resource_sample",
+              "class": "DiagnosticsResourcesMixin",
+              "line_start": 23,
+              "line_end": 108,
+              "loc": 86,
+              "doc": "Снимает память, CPU и свободное место без внешних зависимостей.",
+              "calls": [],
+              "called_by": [
+                "resource_snapshot",
+                "sample_run_resources"
+              ],
+              "module": "videovaudio/diagnostics/resources.py"
+            },
+            {
+              "name": "resource_snapshot",
+              "class": "DiagnosticsResourcesMixin",
+              "line_start": 110,
+              "line_end": 118,
+              "loc": 9,
+              "doc": "Компактные ресурсы системы в момент проблемы.",
+              "calls": [
+                "system_resource_sample"
+              ],
+              "called_by": [
+                "write_problem"
+              ],
+              "module": "videovaudio/diagnostics/resources.py"
+            },
+            {
+              "name": "reset_run_resource_metrics",
+              "class": "DiagnosticsResourcesMixin",
+              "line_start": 120,
+              "line_end": 137,
+              "loc": 18,
+              "doc": "Начинает компактное агрегирование ресурсов для текущей очереди.",
+              "calls": [
+                "sample_run_resources"
+              ],
+              "called_by": [
+                "process_queue",
+                "process_video_queue"
+              ],
+              "module": "videovaudio/diagnostics/resources.py"
+            },
+            {
+              "name": "sample_run_resources",
+              "class": "DiagnosticsResourcesMixin",
+              "line_start": 139,
+              "line_end": 219,
+              "loc": 81,
+              "doc": "Обновляет агрегаты; отдельные heartbeat-снимки в лог не добавляет.",
+              "calls": [
+                "system_resource_sample"
+              ],
+              "called_by": [
+                "heartbeat_loop",
+                "reset_run_resource_metrics",
+                "run_resource_metrics_summary"
+              ],
+              "module": "videovaudio/diagnostics/resources.py"
+            },
+            {
+              "name": "run_resource_metrics_summary",
+              "class": "DiagnosticsResourcesMixin",
+              "line_start": 221,
+              "line_end": 269,
+              "loc": 49,
+              "doc": "Возвращает только итоговые агрегаты, сохраняя лог маленьким.",
+              "calls": [
+                "sample_run_resources"
+              ],
+              "called_by": [
+                "process_queue",
+                "process_video_queue"
+              ],
+              "module": "videovaudio/diagnostics/resources.py"
+            }
+          ]
+        }
+      ],
+      "phase_anchors": []
+    },
+    "videovaudio/diagnostics/run_reports.py": {
+      "loc": 389,
+      "summary": "Per-run diagnostic files, summary/report persistence and latest-run indexes.",
+      "classes": [
+        {
+          "name": "RunReportsMixin",
+          "line_start": 15,
+          "line_end": 389,
+          "doc": "",
+          "methods": [
+            {
+              "name": "reset_run_diagnostics",
+              "class": "RunReportsMixin",
+              "line_start": 16,
+              "line_end": 28,
+              "loc": 13,
+              "doc": "Начинает независимый набор событий для новой очереди.",
+              "calls": [
+                "ensure_diagnostic_io_state"
+              ],
+              "called_by": [
+                "begin_run_diagnostics"
+              ],
+              "module": "videovaudio/diagnostics/run_reports.py"
+            },
+            {
+              "name": "begin_run_diagnostics",
+              "class": "RunReportsMixin",
+              "line_start": 30,
+              "line_end": 67,
+              "loc": 38,
+              "doc": "Создаёт отдельные problem/summary/report-файлы для текущего run_id.",
+              "calls": [
+                "atomic_write_json",
+                "atomic_write_text",
+                "now_iso",
+                "reset_run_diagnostics",
+                "utc_now_iso"
+              ],
+              "called_by": [
+                "process_queue",
+                "process_video_queue"
+              ],
+              "module": "videovaudio/diagnostics/run_reports.py"
+            },
+            {
+              "name": "run_index_payload",
+              "class": "RunReportsMixin",
+              "line_start": 69,
+              "line_end": 141,
+              "loc": 73,
+              "doc": "Компактный индекс файлов и итоговых счётчиков запуска.",
+              "calls": [
+                "diagnostic_status_counts",
+                "now_iso",
+                "utc_now_iso"
+              ],
+              "called_by": [
+                "update_current_session",
+                "update_latest_run"
+              ],
+              "module": "videovaudio/diagnostics/run_reports.py"
+            },
+            {
+              "name": "update_current_session",
+              "class": "RunReportsMixin",
+              "line_start": 143,
+              "line_end": 150,
+              "loc": 8,
+              "doc": "Обновляет состояние открытого приложения, не затирая последний итог.",
+              "calls": [
+                "atomic_write_json",
+                "run_index_payload"
+              ],
+              "called_by": [
+                "on_close",
+                "process_queue",
+                "process_video_queue",
+                "setup_logging",
+                "update_latest_run"
+              ],
+              "module": "videovaudio/diagnostics/run_reports.py"
+            },
+            {
+              "name": "update_latest_run",
+              "class": "RunReportsMixin",
+              "line_start": 152,
+              "line_end": 157,
+              "loc": 6,
+              "doc": "Сохраняет постоянный указатель только на завершённый запуск.",
+              "calls": [
+                "atomic_write_json",
+                "run_index_payload",
+                "update_current_session"
+              ],
+              "called_by": [
+                "save_run_summary"
+              ],
+              "module": "videovaudio/diagnostics/run_reports.py"
+            },
+            {
+              "name": "build_markdown_report",
+              "class": "RunReportsMixin",
+              "line_start": 159,
+              "line_end": 307,
+              "loc": 149,
+              "doc": "Формирует короткий человекочитаемый итог без тяжёлой диагностики.",
+              "calls": [],
+              "called_by": [
+                "save_run_summary"
+              ],
+              "module": "videovaudio/diagnostics/run_reports.py"
+            },
+            {
+              "name": "save_run_summary",
+              "class": "RunReportsMixin",
+              "line_start": 309,
+              "line_end": 389,
+              "loc": 81,
+              "doc": "Сохраняет итог запуска в JSON, чтобы нейросети было легко понять состояние.",
+              "calls": [
+                "append_health_record",
+                "atomic_write_json",
+                "atomic_write_text",
+                "build_codex_report",
+                "build_health_record",
+                "build_markdown_report",
+                "diagnostic_health_snapshot",
+                "diagnostic_status_counts",
+                "diagnostics_integrity",
+                "get_log_storage_stats",
+                "update_latest_run",
+                "write_problem"
+              ],
+              "called_by": [
+                "process_queue",
+                "process_video_queue"
+              ],
+              "module": "videovaudio/diagnostics/run_reports.py"
+            }
+          ]
+        }
+      ],
+      "phase_anchors": []
+    },
+    "videovaudio/dialogs.py": {
+      "loc": 218,
+      "summary": "Custom Tkinter dialogs.",
+      "classes": [
+        {
+          "name": "MultipleSelectionDialog",
+          "line_start": 11,
+          "line_end": 218,
+          "doc": "Диалог для множественного выбора папок",
+          "methods": [
+            {
+              "name": "__init__",
+              "class": "MultipleSelectionDialog",
+              "line_start": 13,
+              "line_end": 93,
+              "loc": 81,
+              "doc": "",
+              "calls": [
+                "load_folders"
+              ],
+              "called_by": [],
+              "module": "videovaudio/dialogs.py"
+            },
+            {
+              "name": "browse_folder",
+              "class": "MultipleSelectionDialog",
+              "line_start": 95,
+              "line_end": 99,
+              "loc": 5,
+              "doc": "Выбор базовой папки для просмотра",
+              "calls": [
+                "load_folders"
+              ],
+              "called_by": [],
+              "module": "videovaudio/dialogs.py"
+            },
+            {
+              "name": "load_folders",
+              "class": "MultipleSelectionDialog",
+              "line_start": 101,
+              "line_end": 122,
+              "loc": 22,
+              "doc": "Загрузка папок из выбранного пути",
+              "calls": [],
+              "called_by": [
+                "__init__",
+                "browse_folder"
+              ],
+              "module": "videovaudio/dialogs.py"
+            },
+            {
+              "name": "on_selection_changed",
+              "class": "MultipleSelectionDialog",
+              "line_start": 124,
+              "line_end": 127,
+              "loc": 4,
+              "doc": "Обновление информации о выборе",
+              "calls": [],
+              "called_by": [],
+              "module": "videovaudio/dialogs.py"
+            },
+            {
+              "name": "select_all",
+              "class": "MultipleSelectionDialog",
+              "line_start": 129,
+              "line_end": 132,
+              "loc": 4,
+              "doc": "Выбрать все папки",
+              "calls": [],
+              "called_by": [],
+              "module": "videovaudio/dialogs.py"
+            },
+            {
+              "name": "deselect_all",
+              "class": "MultipleSelectionDialog",
+              "line_start": 134,
+              "line_end": 136,
+              "loc": 3,
+              "doc": "Снять выбор со всех папок",
+              "calls": [],
+              "called_by": [],
+              "module": "videovaudio/dialogs.py"
+            },
+            {
+              "name": "add_selected",
+              "class": "MultipleSelectionDialog",
+              "line_start": 138,
+              "line_end": 218,
+              "loc": 81,
+              "doc": "Добавить выбранные папки в очередь",
+              "calls": [],
+              "called_by": [],
+              "module": "videovaudio/dialogs.py"
+            }
+          ]
+        }
+      ],
+      "phase_anchors": []
+    },
+    "videovaudio/notifications.py": {
+      "loc": 114,
+      "summary": "Persistent completion window and Windows Explorer navigation (Tk thread only).",
+      "classes": [
+        {
+          "name": "CompletionNotification",
+          "line_start": 42,
+          "line_end": 114,
+          "doc": "One scrollable window retains all results until its cross is clicked.",
+          "methods": [
+            {
+              "name": "__init__",
+              "class": "CompletionNotification",
+              "line_start": 44,
+              "line_end": 46,
+              "loc": 3,
+              "doc": "",
+              "calls": [],
+              "called_by": [],
+              "module": "videovaudio/notifications.py"
+            },
+            {
+              "name": "show",
+              "class": "CompletionNotification",
+              "line_start": 48,
+              "line_end": 102,
+              "loc": 55,
+              "doc": "",
+              "calls": [
+                "open_file"
+              ],
+              "called_by": [],
+              "module": "videovaudio/notifications.py"
+            },
+            {
+              "name": "open_file",
+              "class": "CompletionNotification",
+              "line_start": 104,
+              "line_end": 110,
+              "loc": 7,
+              "doc": "",
+              "calls": [],
+              "called_by": [
+                "show"
+              ],
+              "module": "videovaudio/notifications.py"
+            },
+            {
+              "name": "close",
+              "class": "CompletionNotification",
+              "line_start": 112,
+              "line_end": 114,
+              "loc": 3,
+              "doc": "",
+              "calls": [],
+              "called_by": [],
+              "module": "videovaudio/notifications.py"
+            }
+          ]
+        }
+      ],
+      "phase_anchors": []
+    },
+    "videovaudio/process_runner.py": {
+      "loc": 380,
+      "summary": "Subprocess lifecycle, cancellation, timeout and process log retention.",
+      "classes": [
+        {
+          "name": "ProcessRunnerMixin",
+          "line_start": 15,
+          "line_end": 380,
+          "doc": "",
+          "methods": [
+            {
+              "name": "compact_process_log",
+              "class": "ProcessRunnerMixin",
+              "line_start": 16,
+              "line_end": 47,
+              "loc": 32,
+              "doc": "Ограничивает сохранённый ошибочный вывод процесса без потери начала и хвоста.",
+              "calls": [],
+              "called_by": [
+                "run_process"
+              ],
+              "module": "videovaudio/process_runner.py"
+            },
+            {
+              "name": "remove_success_process_log",
+              "class": "ProcessRunnerMixin",
+              "line_start": 49,
+              "line_end": 60,
+              "loc": 12,
+              "doc": "Успешный служебный вывод не хранится: полезные метрики уже есть в итоговом JSON.",
+              "calls": [],
+              "called_by": [
+                "run_process"
+              ],
+              "module": "videovaudio/process_runner.py"
+            },
+            {
+              "name": "make_process_log_path",
+              "class": "ProcessRunnerMixin",
+              "line_start": 62,
+              "line_end": 70,
+              "loc": 9,
+              "doc": "Создаёт отдельный файл под полный вывод конкретного процесса.",
+              "calls": [
+                "safe_log_fragment"
+              ],
+              "called_by": [
+                "run_process"
+              ],
+              "module": "videovaudio/process_runner.py"
+            },
+            {
+              "name": "completed_process",
+              "class": "ProcessRunnerMixin",
+              "line_start": 72,
+              "line_end": 77,
+              "loc": 6,
+              "doc": "CompletedProcess с метаданными, нужными для диагностики Codex.",
+              "calls": [],
+              "called_by": [
+                "run_process"
+              ],
+              "module": "videovaudio/process_runner.py"
+            },
+            {
+              "name": "terminate_process",
+              "class": "ProcessRunnerMixin",
+              "line_start": 79,
+              "line_end": 104,
+              "loc": 26,
+              "doc": "Мгновенно останавливает ffmpeg/ffprobe процесс и дочерние процессы.",
+              "calls": [],
+              "called_by": [
+                "run_process",
+                "terminate_active_processes"
+              ],
+              "module": "videovaudio/process_runner.py"
+            },
+            {
+              "name": "terminate_active_processes",
+              "class": "ProcessRunnerMixin",
+              "line_start": 106,
+              "line_end": 112,
+              "loc": 7,
+              "doc": "Останавливает все текущие ffmpeg-процессы при нажатии отмены.",
+              "calls": [
+                "terminate_process"
+              ],
+              "called_by": [
+                "done",
+                "on_close",
+                "request_cancel"
+              ],
+              "module": "videovaudio/process_runner.py"
+            },
+            {
+              "name": "request_cancel",
+              "class": "ProcessRunnerMixin",
+              "line_start": 114,
+              "line_end": 121,
+              "loc": 8,
+              "doc": "Обработчик кнопки отмены.",
+              "calls": [
+                "log_message",
+                "set_status",
+                "terminate_active_processes"
+              ],
+              "called_by": [
+                "on_close"
+              ],
+              "module": "videovaudio/process_runner.py"
+            },
+            {
+              "name": "run_process",
+              "class": "ProcessRunnerMixin",
+              "line_start": 123,
+              "line_end": 380,
+              "loc": 258,
+              "doc": "Запускает процесс без PIPE-зависаний; хранит полный вывод только при сбое.",
+              "calls": [
+                "command_to_text",
+                "compact_process_log",
+                "completed_process",
+                "ensure_windows_child_error_mode",
+                "is_libmp3lame_joint_stereo_assertion",
+                "make_process_log_path",
+                "normalize_returncode",
+                "now_iso",
+                "read_text_tail",
+                "remove_success_process_log",
+                "terminate_process",
+                "update_active_state",
+                "write_problem"
+              ],
+              "called_by": [
+                "_split_file_into_stage",
+                "concat_video_files_copy",
+                "convert_single_file",
+                "get_audio_info",
+                "get_video_info",
+                "normalize_video_file",
+                "process_single_folder",
+                "split_long_video_to_outputs"
+              ],
+              "module": "videovaudio/process_runner.py"
+            }
+          ]
+        }
+      ],
+      "phase_anchors": [
+        {
+          "line": 139,
+          "label": "CODEX-PHASE P1",
+          "description": "finalize process output, retention and slow-process diagnostics."
+        },
+        {
+          "line": 218,
+          "label": "CODEX-PHASE P2",
+          "description": "launch child process and register live process context."
+        },
+        {
+          "line": 263,
+          "label": "CODEX-PHASE P3",
+          "description": "poll cancel/fatal-output/timeout/process-exit conditions."
+        },
+        {
+          "line": 340,
+          "label": "CODEX-PHASE P4",
+          "description": "persist footer, classify timeout and return CompletedProcess metadata."
+        }
+      ]
+    },
+    "videovaudio/queues.py": {
+      "loc": 260,
+      "summary": "Audio/video folder queues, validation and queue widgets state.",
+      "classes": [
+        {
+          "name": "QueueMixin",
+          "line_start": 13,
+          "line_end": 260,
+          "doc": "",
+          "methods": [
+            {
+              "name": "guard_queue_edit",
+              "class": "QueueMixin",
+              "line_start": 14,
+              "line_end": 22,
+              "loc": 9,
+              "doc": "Запрещает менять очередь во время фоновой обработки.",
+              "calls": [],
+              "called_by": [
+                "_add_folder_to_queue",
+                "_clear_queue",
+                "_remove_duplicates",
+                "_remove_selected_from_queue",
+                "add_multiple_folders",
+                "add_multiple_video_folders"
+              ],
+              "module": "videovaudio/queues.py"
+            },
+            {
+              "name": "set_queue_controls_state",
+              "class": "QueueMixin",
+              "line_start": 24,
+              "line_end": 27,
+              "loc": 4,
+              "doc": "Включить/выключить кнопки изменения очереди.",
+              "calls": [],
+              "called_by": [
+                "done",
+                "start",
+                "start_video_merge"
+              ],
+              "module": "videovaudio/queues.py"
+            },
+            {
+              "name": "set_video_settings_state",
+              "class": "QueueMixin",
+              "line_start": 29,
+              "line_end": 33,
+              "loc": 5,
+              "doc": "Блокирует настройки на время любой фоновой обработки.",
+              "calls": [],
+              "called_by": [
+                "done",
+                "start",
+                "start_video_merge"
+              ],
+              "module": "videovaudio/queues.py"
+            },
+            {
+              "name": "capture_video_settings",
+              "class": "QueueMixin",
+              "line_start": 35,
+              "line_end": 51,
+              "loc": 17,
+              "doc": "Проверяет и фиксирует настройки до запуска рабочего потока.",
+              "calls": [],
+              "called_by": [
+                "start_video_merge"
+              ],
+              "module": "videovaudio/queues.py"
+            },
+            {
+              "name": "get_folder_queue",
+              "class": "QueueMixin",
+              "line_start": 53,
+              "line_end": 57,
+              "loc": 5,
+              "doc": "Возвращает независимую очередь выбранного режима.",
+              "calls": [],
+              "called_by": [
+                "_add_folder_to_queue",
+                "_clear_queue",
+                "_remove_duplicates",
+                "_remove_selected_from_queue",
+                "update_queue_display"
+              ],
+              "module": "videovaudio/queues.py"
+            },
+            {
+              "name": "get_queue_widgets",
+              "class": "QueueMixin",
+              "line_start": 59,
+              "line_end": 63,
+              "loc": 5,
+              "doc": "Возвращает список и информационную строку нужной вкладки.",
+              "calls": [],
+              "called_by": [
+                "_remove_selected_from_queue",
+                "update_queue_display"
+              ],
+              "module": "videovaudio/queues.py"
+            },
+            {
+              "name": "_add_folder_to_queue",
+              "class": "QueueMixin",
+              "line_start": 65,
+              "line_end": 108,
+              "loc": 44,
+              "doc": "",
+              "calls": [
+                "get_folder_queue",
+                "guard_queue_edit",
+                "log_message",
+                "normalize_folder_key",
+                "normalize_folder_path",
+                "scan_media_files",
+                "update_queue_display"
+              ],
+              "called_by": [
+                "add_folder_to_queue",
+                "add_video_folder_to_queue"
+              ],
+              "module": "videovaudio/queues.py"
+            },
+            {
+              "name": "add_folder_to_queue",
+              "class": "QueueMixin",
+              "line_start": 110,
+              "line_end": 112,
+              "loc": 3,
+              "doc": "Добавить одну папку в очередь",
+              "calls": [
+                "_add_folder_to_queue"
+              ],
+              "called_by": [],
+              "module": "videovaudio/queues.py"
+            },
+            {
+              "name": "add_video_folder_to_queue",
+              "class": "QueueMixin",
+              "line_start": 114,
+              "line_end": 116,
+              "loc": 3,
+              "doc": "Добавить папку курса в очередь объединения видео.",
+              "calls": [
+                "_add_folder_to_queue"
+              ],
+              "called_by": [],
+              "module": "videovaudio/queues.py"
+            },
+            {
+              "name": "add_multiple_folders",
+              "class": "QueueMixin",
+              "line_start": 118,
+              "line_end": 123,
+              "loc": 6,
+              "doc": "Добавить несколько папок через кастомное окно выбора",
+              "calls": [
+                "guard_queue_edit"
+              ],
+              "called_by": [],
+              "module": "videovaudio/queues.py"
+            },
+            {
+              "name": "add_multiple_video_folders",
+              "class": "QueueMixin",
+              "line_start": 125,
+              "line_end": 129,
+              "loc": 5,
+              "doc": "Добавить несколько курсов в очередь объединения видео.",
+              "calls": [
+                "guard_queue_edit"
+              ],
+              "called_by": [],
+              "module": "videovaudio/queues.py"
+            },
+            {
+              "name": "_remove_selected_from_queue",
+              "class": "QueueMixin",
+              "line_start": 131,
+              "line_end": 147,
+              "loc": 17,
+              "doc": "",
+              "calls": [
+                "get_folder_queue",
+                "get_queue_widgets",
+                "guard_queue_edit",
+                "log_message",
+                "update_queue_display"
+              ],
+              "called_by": [
+                "remove_selected_from_queue",
+                "remove_selected_from_video_queue"
+              ],
+              "module": "videovaudio/queues.py"
+            },
+            {
+              "name": "remove_selected_from_queue",
+              "class": "QueueMixin",
+              "line_start": 149,
+              "line_end": 151,
+              "loc": 3,
+              "doc": "Удалить выбранные папки из очереди",
+              "calls": [
+                "_remove_selected_from_queue"
+              ],
+              "called_by": [],
+              "module": "videovaudio/queues.py"
+            },
+            {
+              "name": "remove_selected_from_video_queue",
+              "class": "QueueMixin",
+              "line_start": 153,
+              "line_end": 155,
+              "loc": 3,
+              "doc": "Удалить выбранные курсы из видео-очереди.",
+              "calls": [
+                "_remove_selected_from_queue"
+              ],
+              "called_by": [],
+              "module": "videovaudio/queues.py"
+            },
+            {
+              "name": "_clear_queue",
+              "class": "QueueMixin",
+              "line_start": 157,
+              "line_end": 171,
+              "loc": 15,
+              "doc": "",
+              "calls": [
+                "get_folder_queue",
+                "guard_queue_edit",
+                "log_message",
+                "update_queue_display"
+              ],
+              "called_by": [
+                "clear_queue",
+                "clear_video_queue"
+              ],
+              "module": "videovaudio/queues.py"
+            },
+            {
+              "name": "clear_queue",
+              "class": "QueueMixin",
+              "line_start": 173,
+              "line_end": 175,
+              "loc": 3,
+              "doc": "Очистить всю очередь",
+              "calls": [
+                "_clear_queue"
+              ],
+              "called_by": [],
+              "module": "videovaudio/queues.py"
+            },
+            {
+              "name": "clear_video_queue",
+              "class": "QueueMixin",
+              "line_start": 177,
+              "line_end": 179,
+              "loc": 3,
+              "doc": "Очистить очередь объединения видео.",
+              "calls": [
+                "_clear_queue"
+              ],
+              "called_by": [],
+              "module": "videovaudio/queues.py"
+            },
+            {
+              "name": "_remove_duplicates",
+              "class": "QueueMixin",
+              "line_start": 181,
+              "line_end": 225,
+              "loc": 45,
+              "doc": "",
+              "calls": [
+                "get_folder_queue",
+                "guard_queue_edit",
+                "log_message",
+                "normalize_folder_key",
+                "update_queue_display"
+              ],
+              "called_by": [
+                "remove_duplicates",
+                "remove_video_duplicates"
+              ],
+              "module": "videovaudio/queues.py"
+            },
+            {
+              "name": "remove_duplicates",
+              "class": "QueueMixin",
+              "line_start": 227,
+              "line_end": 229,
+              "loc": 3,
+              "doc": "Удалить дубликаты и несуществующие папки из очереди",
+              "calls": [
+                "_remove_duplicates"
+              ],
+              "called_by": [],
+              "module": "videovaudio/queues.py"
+            },
+            {
+              "name": "remove_video_duplicates",
+              "class": "QueueMixin",
+              "line_start": 231,
+              "line_end": 233,
+              "loc": 3,
+              "doc": "Очистить видео-очередь от дубликатов и пропавших папок.",
+              "calls": [
+                "_remove_duplicates"
+              ],
+              "called_by": [],
+              "module": "videovaudio/queues.py"
+            },
+            {
+              "name": "update_queue_display",
+              "class": "QueueMixin",
+              "line_start": 235,
+              "line_end": 260,
+              "loc": 26,
+              "doc": "Обновить отображение очереди",
+              "calls": [
+                "get_files",
+                "get_folder_queue",
+                "get_queue_widgets"
+              ],
+              "called_by": [
+                "_add_folder_to_queue",
+                "_clear_queue",
+                "_remove_duplicates",
+                "_remove_selected_from_queue",
+                "process_video_queue"
+              ],
+              "module": "videovaudio/queues.py"
+            }
+          ]
+        }
+      ],
+      "phase_anchors": []
+    },
+    "videovaudio/run/__init__.py": {
+      "loc": 17,
+      "summary": "Run feature package.",
+      "classes": [
+        {
+          "name": "RunMixin",
+          "line_start": 11,
+          "line_end": 14,
+          "doc": "Composition-only aggregate; contains no feature behavior itself.",
+          "methods": []
+        }
+      ],
+      "phase_anchors": []
+    },
+    "videovaudio/run/audio.py": {
+      "loc": 366,
+      "summary": "Audio queue run orchestration and start action.",
+      "classes": [
+        {
+          "name": "AudioRunMixin",
+          "line_start": 17,
+          "line_end": 366,
+          "doc": "",
+          "methods": [
+            {
+              "name": "process_queue",
+              "class": "AudioRunMixin",
+              "line_start": 18,
+              "line_end": 325,
+              "loc": 308,
+              "doc": "Обработка всей очереди папок по снимку очереди на момент старта.",
+              "calls": [
+                "begin_run_diagnostics",
+                "finish_active_run",
+                "log_message",
+                "normalize_folder_key",
+                "now_iso",
+                "process_single_folder",
+                "reset_run_resource_metrics",
+                "run_resource_metrics_summary",
+                "save_run_summary",
+                "start_heartbeat",
+                "ui_after",
+                "update_active_state",
+                "update_current_session",
+                "write_problem"
+              ],
+              "called_by": [],
+              "module": "videovaudio/run/audio.py"
+            },
+            {
+              "name": "start",
+              "class": "AudioRunMixin",
+              "line_start": 327,
+              "line_end": 366,
+              "loc": 40,
+              "doc": "",
+              "calls": [
+                "log_message",
+                "set_queue_controls_state",
+                "set_status",
+                "set_video_settings_state",
+                "write_problem"
+              ],
+              "called_by": [],
+              "module": "videovaudio/run/audio.py"
+            }
+          ]
+        }
+      ],
+      "phase_anchors": []
+    },
+    "videovaudio/run/lifecycle.py": {
+      "loc": 51,
+      "summary": "Shared run completion/UI restoration.",
+      "classes": [
+        {
+          "name": "RunLifecycleMixin",
+          "line_start": 17,
+          "line_end": 51,
+          "doc": "",
+          "methods": [
+            {
+              "name": "done",
+              "class": "RunLifecycleMixin",
+              "line_start": 18,
+              "line_end": 51,
+              "loc": 34,
+              "doc": "",
+              "calls": [
+                "set_queue_controls_state",
+                "set_status",
+                "set_video_settings_state",
+                "show_completion_notification",
+                "terminate_active_processes",
+                "update_progress"
+              ],
+              "called_by": [],
+              "module": "videovaudio/run/lifecycle.py"
+            }
+          ]
+        }
+      ],
+      "phase_anchors": []
+    },
+    "videovaudio/run/video.py": {
+      "loc": 301,
+      "summary": "Video queue run orchestration and start action.",
+      "classes": [
+        {
+          "name": "VideoRunMixin",
+          "line_start": 17,
+          "line_end": 301,
+          "doc": "",
+          "methods": [
+            {
+              "name": "process_video_queue",
+              "class": "VideoRunMixin",
+              "line_start": 18,
+              "line_end": 238,
+              "loc": 221,
+              "doc": "Фоновая обработка независимой очереди объединения видео.",
+              "calls": [
+                "begin_run_diagnostics",
+                "finish_active_run",
+                "log_message",
+                "normalize_folder_key",
+                "now_iso",
+                "process_video_folder",
+                "reset_run_resource_metrics",
+                "run_resource_metrics_summary",
+                "save_run_summary",
+                "start_heartbeat",
+                "ui_after",
+                "update_active_state",
+                "update_current_session",
+                "update_queue_display",
+                "write_problem"
+              ],
+              "called_by": [],
+              "module": "videovaudio/run/video.py"
+            },
+            {
+              "name": "start_video_merge",
+              "class": "VideoRunMixin",
+              "line_start": 240,
+              "line_end": 301,
+              "loc": 62,
+              "doc": "Запускает независимую очередь объединения видео.",
+              "calls": [
+                "capture_video_settings",
+                "log_message",
+                "set_queue_controls_state",
+                "set_status",
+                "set_video_settings_state",
+                "write_problem"
+              ],
+              "called_by": [],
+              "module": "videovaudio/run/video.py"
+            }
+          ]
+        }
+      ],
+      "phase_anchors": []
+    },
+    "videovaudio/storage/__init__.py": {
+      "loc": 19,
+      "summary": "Storage feature package.",
+      "classes": [
+        {
+          "name": "StorageMixin",
+          "line_start": 13,
+          "line_end": 16,
+          "doc": "Composition-only aggregate; contains no feature behavior itself.",
+          "methods": []
+        }
+      ],
+      "phase_anchors": []
+    },
+    "videovaudio/storage/atomic.py": {
+      "loc": 101,
+      "summary": "Atomic file replacement/read-write primitives.",
+      "classes": [
+        {
+          "name": "AtomicStorageMixin",
+          "line_start": 25,
+          "line_end": 101,
+          "doc": "",
+          "methods": [
+            {
+              "name": "is_retryable_atomic_replace_error",
+              "class": "AtomicStorageMixin",
+              "line_start": 26,
+              "line_end": 32,
+              "loc": 7,
+              "doc": "Определяет временные блокировки файла, характерные для Windows.",
+              "calls": [],
+              "called_by": [
+                "atomic_replace_with_retry"
+              ],
+              "module": "videovaudio/storage/atomic.py"
+            },
+            {
+              "name": "atomic_replace_with_retry",
+              "class": "AtomicStorageMixin",
+              "line_start": 34,
+              "line_end": 49,
+              "loc": 16,
+              "doc": "Ограниченно повторяет атомарную замену при временной блокировке.",
+              "calls": [
+                "is_retryable_atomic_replace_error"
+              ],
+              "called_by": [
+                "atomic_write_json",
+                "atomic_write_text",
+                "publish_video_outputs"
+              ],
+              "module": "videovaudio/storage/atomic.py"
+            },
+            {
+              "name": "cleanup_own_atomic_temp",
+              "class": "AtomicStorageMixin",
+              "line_start": 51,
+              "line_end": 62,
+              "loc": 12,
+              "doc": "Удаляет только временный файл текущей операции записи.",
+              "calls": [
+                "record_diagnostic_failure"
+              ],
+              "called_by": [
+                "atomic_write_json",
+                "atomic_write_text"
+              ],
+              "module": "videovaudio/storage/atomic.py"
+            },
+            {
+              "name": "atomic_write_json",
+              "class": "AtomicStorageMixin",
+              "line_start": 64,
+              "line_end": 77,
+              "loc": 14,
+              "doc": "Записывает важный JSON через временный файл и атомарную замену.",
+              "calls": [
+                "atomic_replace_with_retry",
+                "cleanup_own_atomic_temp"
+              ],
+              "called_by": [
+                "begin_run_diagnostics",
+                "save_concat_input_manifest",
+                "save_run_summary",
+                "setup_logging",
+                "update_active_state",
+                "update_current_session",
+                "update_latest_run"
+              ],
+              "module": "videovaudio/storage/atomic.py"
+            },
+            {
+              "name": "atomic_write_text",
+              "class": "AtomicStorageMixin",
+              "line_start": 79,
+              "line_end": 92,
+              "loc": 14,
+              "doc": "Атомарно сохраняет небольшой текстовый служебный файл.",
+              "calls": [
+                "atomic_replace_with_retry",
+                "cleanup_own_atomic_temp"
+              ],
+              "called_by": [
+                "append_health_record",
+                "begin_run_diagnostics",
+                "save_run_summary",
+                "write_schema_guide"
+              ],
+              "module": "videovaudio/storage/atomic.py"
+            },
+            {
+              "name": "read_json_file",
+              "class": "AtomicStorageMixin",
+              "line_start": 94,
+              "line_end": 101,
+              "loc": 8,
+              "doc": "Безопасно читает JSON, возвращая пустой словарь при повреждении.",
+              "calls": [],
+              "called_by": [
+                "setup_logging"
+              ],
+              "module": "videovaudio/storage/atomic.py"
+            }
+          ]
+        }
+      ],
+      "phase_anchors": []
+    },
+    "videovaudio/storage/logging_setup.py": {
+      "loc": 332,
+      "summary": "Session directories, Python logging and diagnostic artifact setup.",
+      "classes": [
+        {
+          "name": "LoggingSetupMixin",
+          "line_start": 25,
+          "line_end": 332,
+          "doc": "",
+          "methods": [
+            {
+              "name": "write_schema_guide",
+              "class": "LoggingSetupMixin",
+              "line_start": 26,
+              "line_end": 83,
+              "loc": 58,
+              "doc": "Пишет стабильную краткую карту диагностических файлов для Codex.",
+              "calls": [
+                "atomic_write_text"
+              ],
+              "called_by": [
+                "setup_logging"
+              ],
+              "module": "videovaudio/storage/logging_setup.py"
+            },
+            {
+              "name": "setup_logging",
+              "class": "LoggingSetupMixin",
+              "line_start": 85,
+              "line_end": 332,
+              "loc": 248,
+              "doc": "Создаёт компактные логи проблем рядом с программой.",
+              "calls": [
+                "atomic_write_json",
+                "cleanup_old_problem_logs",
+                "cleanup_stale_atomic_temp_files",
+                "cleanup_unreferenced_process_logs",
+                "compress_old_detailed_logs",
+                "get_runtime_context",
+                "now_iso",
+                "read_json_file",
+                "update_active_state",
+                "update_current_session",
+                "utc_now_iso",
+                "write_problem",
+                "write_schema_guide"
+              ],
+              "called_by": [
+                "__init__"
+              ],
+              "module": "videovaudio/storage/logging_setup.py"
+            }
+          ]
+        }
+      ],
+      "phase_anchors": []
+    },
+    "videovaudio/storage/maintenance.py": {
+      "loc": 337,
+      "summary": "Log retention, compression and stale artifact cleanup.",
+      "classes": [
+        {
+          "name": "LogMaintenanceMixin",
+          "line_start": 25,
+          "line_end": 337,
+          "doc": "",
+          "methods": [
+            {
+              "name": "compress_old_detailed_logs",
+              "class": "LogMaintenanceMixin",
+              "line_start": 26,
+              "line_end": 104,
+              "loc": 79,
+              "doc": "Сжимает старые подробные текстовые логи, сохраняя имена ссылок через .gz.",
+              "calls": [],
+              "called_by": [
+                "setup_logging"
+              ],
+              "module": "videovaudio/storage/maintenance.py"
+            },
+            {
+              "name": "is_process_running",
+              "class": "LogMaintenanceMixin",
+              "line_start": 106,
+              "line_end": 160,
+              "loc": 55,
+              "doc": "Без сторонних зависимостей проверяет, существует ли процесс.",
+              "calls": [],
+              "called_by": [
+                "cleanup_stale_atomic_temp_files"
+              ],
+              "module": "videovaudio/storage/maintenance.py"
+            },
+            {
+              "name": "cleanup_stale_atomic_temp_files",
+              "class": "LogMaintenanceMixin",
+              "line_start": 162,
+              "line_end": 215,
+              "loc": 54,
+              "doc": "Удаляет старые временные active-state файлы только мёртвых процессов.",
+              "calls": [
+                "is_process_running"
+              ],
+              "called_by": [
+                "setup_logging"
+              ],
+              "module": "videovaudio/storage/maintenance.py"
+            },
+            {
+              "name": "cleanup_old_problem_logs",
+              "class": "LogMaintenanceMixin",
+              "line_start": 217,
+              "line_end": 266,
+              "loc": 50,
+              "doc": "Удаляет только журналы этой программы старше 120 дней.",
+              "calls": [],
+              "called_by": [
+                "setup_logging"
+              ],
+              "module": "videovaudio/storage/maintenance.py"
+            },
+            {
+              "name": "collect_referenced_process_logs",
+              "class": "LogMaintenanceMixin",
+              "line_start": 268,
+              "line_end": 298,
+              "loc": 31,
+              "doc": "Находит process-log, на которые ссылаются реальные проблемные события.",
+              "calls": [],
+              "called_by": [
+                "cleanup_unreferenced_process_logs"
+              ],
+              "module": "videovaudio/storage/maintenance.py"
+            },
+            {
+              "name": "cleanup_unreferenced_process_logs",
+              "class": "LogMaintenanceMixin",
+              "line_start": 300,
+              "line_end": 337,
+              "loc": 38,
+              "doc": "Удаляет старые логи успешных процессов, оставляя детали реальных проблем.",
+              "calls": [
+                "collect_referenced_process_logs"
+              ],
+              "called_by": [
+                "setup_logging"
+              ],
+              "module": "videovaudio/storage/maintenance.py"
+            }
+          ]
+        }
+      ],
+      "phase_anchors": []
+    },
+    "videovaudio/storage/media_scan.py": {
+      "loc": 132,
+      "summary": "Supported-media discovery and natural ordering.",
+      "classes": [
+        {
+          "name": "MediaScanMixin",
+          "line_start": 25,
+          "line_end": 132,
+          "doc": "",
+          "methods": [
+            {
+              "name": "natural_sort_key",
+              "class": "MediaScanMixin",
+              "line_start": 26,
+              "line_end": 29,
+              "loc": 4,
+              "doc": "Естественная сортировка: 1, 2, 10 вместо 1, 10, 2.",
+              "calls": [],
+              "called_by": [],
+              "module": "videovaudio/storage/media_scan.py"
+            },
+            {
+              "name": "scan_media_files",
+              "class": "MediaScanMixin",
+              "line_start": 31,
+              "line_end": 125,
+              "loc": 95,
+              "doc": "Сканирует видео и отдельно сообщает ошибки чтения.",
+              "calls": [
+                "normalize_folder_path",
+                "write_problem"
+              ],
+              "called_by": [
+                "_add_folder_to_queue",
+                "get_files",
+                "process_single_folder",
+                "process_video_folder"
+              ],
+              "module": "videovaudio/storage/media_scan.py"
+            },
+            {
+              "name": "get_files",
+              "class": "MediaScanMixin",
+              "line_start": 127,
+              "line_end": 132,
+              "loc": 6,
+              "doc": "Возвращает видео для интерфейса без записи диагностических событий.",
+              "calls": [
+                "scan_media_files"
+              ],
+              "called_by": [
+                "update_queue_display"
+              ],
+              "module": "videovaudio/storage/media_scan.py"
+            }
+          ]
+        }
+      ],
+      "phase_anchors": []
+    },
+    "videovaudio/storage/runtime.py": {
+      "loc": 220,
+      "summary": "Runtime/build identity, tool versions and log storage metrics.",
+      "classes": [
+        {
+          "name": "RuntimeContextMixin",
+          "line_start": 25,
+          "line_end": 220,
+          "doc": "",
+          "methods": [
+            {
+              "name": "get_tool_version",
+              "class": "RuntimeContextMixin",
+              "line_start": 26,
+              "line_end": 44,
+              "loc": 19,
+              "doc": "Читает только первую строку версии без создания отдельного process-log.",
+              "calls": [],
+              "called_by": [
+                "get_runtime_context"
+              ],
+              "module": "videovaudio/storage/runtime.py"
+            },
+            {
+              "name": "get_source_identity",
+              "class": "RuntimeContextMixin",
+              "line_start": 46,
+              "line_end": 118,
+              "loc": 73,
+              "doc": "Хэширует весь модульный source tree, чтобы build_id менялся вместе с кодом.",
+              "calls": [
+                "sha256_file"
+              ],
+              "called_by": [
+                "get_runtime_context"
+              ],
+              "module": "videovaudio/storage/runtime.py"
+            },
+            {
+              "name": "get_runtime_context",
+              "class": "RuntimeContextMixin",
+              "line_start": 120,
+              "line_end": 167,
+              "loc": 48,
+              "doc": "",
+              "calls": [
+                "get_source_identity",
+                "get_tool_version"
+              ],
+              "called_by": [
+                "setup_logging"
+              ],
+              "module": "videovaudio/storage/runtime.py"
+            },
+            {
+              "name": "get_log_storage_stats",
+              "class": "RuntimeContextMixin",
+              "line_start": 169,
+              "line_end": 220,
+              "loc": 52,
+              "doc": "",
+              "calls": [],
+              "called_by": [
+                "build_health_record",
+                "save_run_summary"
+              ],
+              "module": "videovaudio/storage/runtime.py"
+            }
+          ]
+        }
+      ],
+      "phase_anchors": []
+    },
+    "videovaudio/ui.py": {
+      "loc": 297,
+      "summary": "Tkinter interface construction and UI-thread helper methods.",
+      "classes": [
+        {
+          "name": "UIMixin",
+          "line_start": 13,
+          "line_end": 297,
+          "doc": "",
+          "methods": [
+            {
+              "name": "show_completion_notification",
+              "class": "UIMixin",
+              "line_start": 14,
+              "line_end": 18,
+              "loc": 5,
+              "doc": "Показать постоянное уведомление; вызывается из UI-потока.",
+              "calls": [],
+              "called_by": [
+                "done"
+              ],
+              "module": "videovaudio/ui.py"
+            },
+            {
+              "name": "create_interface",
+              "class": "UIMixin",
+              "line_start": 20,
+              "line_end": 262,
+              "loc": 243,
+              "doc": "",
+              "calls": [],
+              "called_by": [
+                "__init__"
+              ],
+              "module": "videovaudio/ui.py"
+            },
+            {
+              "name": "ui_after",
+              "class": "UIMixin",
+              "line_start": 264,
+              "line_end": 275,
+              "loc": 12,
+              "doc": "Безопасно планирует действие в Tkinter, даже если окно уже закрывается.",
+              "calls": [],
+              "called_by": [
+                "log_message",
+                "process_queue",
+                "process_single_folder",
+                "process_video_folder",
+                "process_video_queue",
+                "set_status",
+                "update_progress"
+              ],
+              "module": "videovaudio/ui.py"
+            },
+            {
+              "name": "log_message",
+              "class": "UIMixin",
+              "line_start": 277,
+              "line_end": 291,
+              "loc": 15,
+              "doc": "Пишет сообщение в окно; повторяющиеся успехи можно не сохранять в файл.",
+              "calls": [
+                "ui_after"
+              ],
+              "called_by": [
+                "_add_folder_to_queue",
+                "_clear_queue",
+                "_remove_duplicates",
+                "_remove_selected_from_queue",
+                "_split_file_into_stage",
+                "create_video_group_output",
+                "process_queue",
+                "process_single_folder",
+                "process_video_folder",
+                "process_video_queue",
+                "request_cancel",
+                "start",
+                "start_video_merge"
+              ],
+              "module": "videovaudio/ui.py"
+            },
+            {
+              "name": "set_status",
+              "class": "UIMixin",
+              "line_start": 293,
+              "line_end": 294,
+              "loc": 2,
+              "doc": "",
+              "calls": [
+                "ui_after"
+              ],
+              "called_by": [
+                "done",
+                "process_single_folder",
+                "process_video_folder",
+                "request_cancel",
+                "start",
+                "start_video_merge"
+              ],
+              "module": "videovaudio/ui.py"
+            },
+            {
+              "name": "update_progress",
+              "class": "UIMixin",
+              "line_start": 296,
+              "line_end": 297,
+              "loc": 2,
+              "doc": "",
+              "calls": [
+                "ui_after"
+              ],
+              "called_by": [
+                "_split_file_into_stage",
+                "done",
+                "process_single_folder",
+                "process_video_folder"
+              ],
+              "module": "videovaudio/ui.py"
+            }
+          ]
+        }
+      ],
+      "phase_anchors": []
+    },
+    "videovaudio/video/__init__.py": {
+      "loc": 17,
+      "summary": "Video feature package.",
+      "classes": [
+        {
+          "name": "VideoMixin",
+          "line_start": 11,
+          "line_end": 14,
+          "doc": "Composition-only aggregate; contains no feature behavior itself.",
+          "methods": []
+        }
+      ],
+      "phase_anchors": []
+    },
+    "videovaudio/video/folder_workflow.py": {
+      "loc": 369,
+      "summary": "End-to-end workflow for one course folder in video-merge mode.",
+      "classes": [
+        {
+          "name": "VideoFolderWorkflowMixin",
+          "line_start": 15,
+          "line_end": 369,
+          "doc": "",
+          "methods": [
+            {
+              "name": "process_video_folder",
+              "class": "VideoFolderWorkflowMixin",
+              "line_start": 16,
+              "line_end": 369,
+              "loc": 354,
+              "doc": "Объединяет один курс в проверенные MP4-части до 10 часов.",
+              "calls": [
+                "build_video_groups",
+                "choose_video_target_profile",
+                "create_video_group_output",
+                "format_duration",
+                "get_video_info",
+                "log_message",
+                "normalize_folder_path",
+                "now_iso",
+                "publish_video_outputs",
+                "safe_log_fragment",
+                "scan_media_files",
+                "set_status",
+                "split_long_video_to_outputs",
+                "ui_after",
+                "update_active_state",
+                "update_progress",
+                "write_problem"
+              ],
+              "called_by": [
+                "process_video_queue"
+              ],
+              "module": "videovaudio/video/folder_workflow.py"
+            }
+          ]
+        }
+      ],
+      "phase_anchors": [
+        {
+          "line": 102,
+          "label": "CODEX-PHASE V1",
+          "description": "scan and validate the course folder."
+        },
+        {
+          "line": 141,
+          "label": "CODEX-PHASE V2",
+          "description": "probe each input and build duration/profile items."
+        },
+        {
+          "line": 181,
+          "label": "CODEX-PHASE V3",
+          "description": "choose target profile and pack videos into <=10-hour groups."
+        },
+        {
+          "line": 220,
+          "label": "CODEX-PHASE V4",
+          "description": "build and validate each staged output group."
+        },
+        {
+          "line": 297,
+          "label": "CODEX-PHASE V5",
+          "description": "atomically publish the complete validated output set."
+        },
+        {
+          "line": 352,
+          "label": "CODEX-PHASE V6",
+          "description": "cleanup staging directory and finalize folder state."
+        }
+      ]
+    },
+    "videovaudio/video/operations.py": {
+      "loc": 395,
+      "summary": "Reusable video normalize/concat/split/group/publish operations.",
+      "classes": [
+        {
+          "name": "VideoOperationsMixin",
+          "line_start": 15,
+          "line_end": 395,
+          "doc": "",
+          "methods": [
+            {
+              "name": "concat_video_files_copy",
+              "class": "VideoOperationsMixin",
+              "line_start": 16,
+              "line_end": 46,
+              "loc": 31,
+              "doc": "Быстро склеивает уже совместимые MP4 без потери качества.",
+              "calls": [
+                "escape_concat_path",
+                "ffmpeg_base_command",
+                "run_process",
+                "safe_log_fragment"
+              ],
+              "called_by": [
+                "create_video_group_output"
+              ],
+              "module": "videovaudio/video/operations.py"
+            },
+            {
+              "name": "normalize_video_file",
+              "class": "VideoOperationsMixin",
+              "line_start": 48,
+              "line_end": 88,
+              "loc": 41,
+              "doc": "Нормализует один ролик и проверяет, что его содержимое не потеряно.",
+              "calls": [
+                "build_video_normalize_command",
+                "run_process",
+                "validate_merged_video",
+                "write_problem"
+              ],
+              "called_by": [
+                "create_video_group_output"
+              ],
+              "module": "videovaudio/video/operations.py"
+            },
+            {
+              "name": "create_video_group_output",
+              "class": "VideoOperationsMixin",
+              "line_start": 90,
+              "line_end": 224,
+              "loc": 135,
+              "doc": "Создаёт одну часть: copy при совместимости, иначе нормализация.",
+              "calls": [
+                "concat_video_files_copy",
+                "log_message",
+                "mark_problem_recovered",
+                "mark_problem_unresolved",
+                "normalize_video_file",
+                "validate_merged_video",
+                "video_group_can_copy",
+                "write_problem"
+              ],
+              "called_by": [
+                "process_video_folder"
+              ],
+              "module": "videovaudio/video/operations.py"
+            },
+            {
+              "name": "split_long_video_to_outputs",
+              "class": "VideoOperationsMixin",
+              "line_start": 226,
+              "line_end": 318,
+              "loc": 93,
+              "doc": "Перекодирует одиночное видео длиннее лимита сразу в части ≤10 часов.",
+              "calls": [
+                "build_video_normalize_command",
+                "duration_mismatch",
+                "get_video_info",
+                "run_process",
+                "validate_merged_video",
+                "write_problem"
+              ],
+              "called_by": [
+                "process_video_folder"
+              ],
+              "module": "videovaudio/video/operations.py"
+            },
+            {
+              "name": "build_video_groups",
+              "class": "VideoOperationsMixin",
+              "line_start": 320,
+              "line_end": 343,
+              "loc": 24,
+              "doc": "Укладывает целые уроки в части до 10 часов без разреза между кадрами.",
+              "calls": [],
+              "called_by": [
+                "process_video_folder"
+              ],
+              "module": "videovaudio/video/operations.py"
+            },
+            {
+              "name": "publish_video_outputs",
+              "class": "VideoOperationsMixin",
+              "line_start": 345,
+              "line_end": 395,
+              "loc": 51,
+              "doc": "Публикует только проверенный полный набор с rollback старых частей.",
+              "calls": [
+                "atomic_replace_with_retry"
+              ],
+              "called_by": [
+                "process_video_folder"
+              ],
+              "module": "videovaudio/video/operations.py"
+            }
+          ]
+        }
+      ],
+      "phase_anchors": []
+    },
+    "videovaudio/video/profile.py": {
+      "loc": 369,
+      "summary": "Video probing, target profile selection, FFmpeg normalization command and validation.",
+      "classes": [
+        {
+          "name": "VideoProfileMixin",
+          "line_start": 15,
+          "line_end": 369,
+          "doc": "",
+          "methods": [
+            {
+              "name": "parse_frame_rate",
+              "class": "VideoProfileMixin",
+              "line_start": 16,
+              "line_end": 29,
+              "loc": 14,
+              "doc": "Преобразует ffprobe-частоту вида 30000/1001 в число.",
+              "calls": [],
+              "called_by": [
+                "choose_video_target_profile"
+              ],
+              "module": "videovaudio/video/profile.py"
+            },
+            {
+              "name": "get_video_info",
+              "class": "VideoProfileMixin",
+              "line_start": 31,
+              "line_end": 170,
+              "loc": 140,
+              "doc": "Читает длительность и параметры первого видео/аудиопотока.",
+              "calls": [
+                "extract_ffprobe_json",
+                "run_process",
+                "write_problem"
+              ],
+              "called_by": [
+                "process_video_folder",
+                "split_long_video_to_outputs",
+                "validate_merged_video"
+              ],
+              "module": "videovaudio/video/profile.py"
+            },
+            {
+              "name": "video_stream_copy_key",
+              "class": "VideoProfileMixin",
+              "line_start": 172,
+              "line_end": 188,
+              "loc": 17,
+              "doc": "Параметры, которые должны совпасть для безопасной быстрой склейки.",
+              "calls": [],
+              "called_by": [
+                "video_group_can_copy"
+              ],
+              "module": "videovaudio/video/profile.py"
+            },
+            {
+              "name": "video_group_can_copy",
+              "class": "VideoProfileMixin",
+              "line_start": 190,
+              "line_end": 204,
+              "loc": 15,
+              "doc": "Разрешает copy только для одинаковых, интернет-совместимых MP4-потоков.",
+              "calls": [
+                "video_stream_copy_key"
+              ],
+              "called_by": [
+                "create_video_group_output"
+              ],
+              "module": "videovaudio/video/profile.py"
+            },
+            {
+              "name": "choose_video_target_profile",
+              "class": "VideoProfileMixin",
+              "line_start": 206,
+              "line_end": 251,
+              "loc": 46,
+              "doc": "Формирует единый профиль из настроек и частоты кадров курса.",
+              "calls": [
+                "parse_frame_rate"
+              ],
+              "called_by": [
+                "process_video_folder"
+              ],
+              "module": "videovaudio/video/profile.py"
+            },
+            {
+              "name": "video_filter_for_target",
+              "class": "VideoProfileMixin",
+              "line_start": 253,
+              "line_end": 262,
+              "loc": 10,
+              "doc": "",
+              "calls": [],
+              "called_by": [
+                "build_video_normalize_command"
+              ],
+              "module": "videovaudio/video/profile.py"
+            },
+            {
+              "name": "build_video_normalize_command",
+              "class": "VideoProfileMixin",
+              "line_start": 264,
+              "line_end": 313,
+              "loc": 50,
+              "doc": "Строит единый H.264/AAC профиль, добавляя тишину при отсутствии звука.",
+              "calls": [
+                "ffmpeg_base_command",
+                "video_filter_for_target"
+              ],
+              "called_by": [
+                "normalize_video_file",
+                "split_long_video_to_outputs"
+              ],
+              "module": "videovaudio/video/profile.py"
+            },
+            {
+              "name": "validate_merged_video",
+              "class": "VideoProfileMixin",
+              "line_start": 315,
+              "line_end": 369,
+              "loc": 55,
+              "doc": "Проверяет контейнер, кодеки, длительность и лимит готовой части.",
+              "calls": [
+                "duration_mismatch",
+                "get_video_info"
+              ],
+              "called_by": [
+                "create_video_group_output",
+                "normalize_video_file",
+                "split_long_video_to_outputs"
+              ],
+              "module": "videovaudio/video/profile.py"
+            }
+          ]
+        }
+      ],
+      "phase_anchors": []
+    }
+  },
+  "method_owners": {
+    "convert_single_file": {
+      "class": "AudioFileConversionMixin",
+      "line_start": 20,
+      "line_end": 506,
+      "loc": 487,
+      "doc": "Многопоточная конвертация одного видео с честной диагностикой ffmpeg.",
+      "calls": [
+        "build_output_path",
+        "command_to_text",
+        "diagnose_ffmpeg_failure",
+        "duration_mismatch",
+        "ffmpeg_base_command",
+        "get_audio_info",
+        "mark_problem_recovered",
+        "mark_problem_unresolved",
+        "path_facts",
+        "run_process",
+        "write_problem"
+      ],
+      "called_by": [],
+      "module": "videovaudio/audio/file_conversion.py"
+    },
+    "process_single_folder": {
+      "class": "AudioFolderWorkflowMixin",
+      "line_start": 63,
+      "line_end": 988,
+      "loc": 926,
+      "doc": "Обработка одной папки. Успех возвращается только если все этапы реально выполнены.",
+      "calls": [
+        "audio_profile_key",
+        "audio_profile_matches_target",
+        "build_audio_split_output_path",
+        "command_to_text",
+        "duration_mismatch",
+        "escape_concat_path",
+        "expected_audio_profile",
+        "ffmpeg_base_command",
+        "format_duration",
+        "get_audio_info",
+        "log_message",
+        "mark_problem_recovered",
+        "mark_problem_unresolved",
+        "normalize_folder_path",
+        "normalize_returncode",
+        "now_iso",
+        "path_facts",
+        "run_process",
+        "save_concat_input_manifest",
+        "scan_media_files",
+        "set_status",
+        "split_file",
+        "trim_text",
+        "ui_after",
+        "update_active_state",
+        "update_progress",
+        "write_problem"
+      ],
+      "called_by": [
+        "process_queue"
+      ],
+      "module": "videovaudio/audio/folder_workflow.py"
+    },
+    "extract_ffprobe_json": {
+      "class": "AudioProbeMixin",
+      "line_start": 16,
+      "line_end": 31,
+      "loc": 16,
+      "doc": "Извлекает JSON ffprobe из process-log с добавленным служебным заголовком.",
+      "calls": [],
+      "called_by": [
+        "get_audio_info",
+        "get_video_info"
+      ],
+      "module": "videovaudio/audio/probe.py"
+    },
+    "get_audio_info": {
+      "class": "AudioProbeMixin",
+      "line_start": 33,
+      "line_end": 139,
+      "loc": 107,
+      "doc": "Возвращает длительность и фактический аудиопрофиль через один вызов ffprobe.",
+      "calls": [
+        "command_to_text",
+        "extract_ffprobe_json",
+        "run_process",
+        "trim_text",
+        "write_problem"
+      ],
+      "called_by": [
+        "convert_single_file",
+        "get_duration",
+        "process_single_folder"
+      ],
+      "module": "videovaudio/audio/probe.py"
+    },
+    "get_duration": {
+      "class": "AudioProbeMixin",
+      "line_start": 141,
+      "line_end": 143,
+      "loc": 3,
+      "doc": "Возвращает длительность файла через ffprobe и логирует реальные причины ошибок.",
+      "calls": [
+        "get_audio_info"
+      ],
+      "called_by": [
+        "_split_file_into_stage"
+      ],
+      "module": "videovaudio/audio/probe.py"
+    },
+    "format_duration": {
+      "class": "AudioProbeMixin",
+      "line_start": 145,
+      "line_end": 148,
+      "loc": 4,
+      "doc": "",
+      "calls": [],
+      "called_by": [
+        "_split_file_into_stage",
+        "process_single_folder",
+        "process_video_folder"
+      ],
+      "module": "videovaudio/audio/probe.py"
+    },
+    "split_file": {
+      "class": "AudioSplitMixin",
+      "line_start": 17,
+      "line_end": 91,
+      "loc": 75,
+      "doc": "Проверяет полный набор временных частей и затем публикует без перезаписи.",
+      "calls": [
+        "_split_file_into_stage",
+        "write_problem"
+      ],
+      "called_by": [
+        "process_single_folder"
+      ],
+      "module": "videovaudio/audio/split.py"
+    },
+    "_split_file_into_stage": {
+      "class": "AudioSplitMixin",
+      "line_start": 93,
+      "line_end": 715,
+      "loc": 623,
+      "doc": "Точная разбивка ≤10 часов. Возвращает True только если все части созданы.",
+      "calls": [
+        "build_audio_split_output_path",
+        "command_to_text",
+        "duration_mismatch",
+        "ffmpeg_base_command",
+        "format_duration",
+        "get_duration",
+        "log_message",
+        "mark_problem_recovered",
+        "mark_problem_unresolved",
+        "run_process",
+        "trim_text",
+        "update_progress",
+        "write_problem"
+      ],
+      "called_by": [
+        "split_file"
+      ],
+      "module": "videovaudio/audio/split.py"
+    },
+    "duration_mismatch": {
+      "class": "AudioContractMixin",
+      "line_start": 14,
+      "line_end": 24,
+      "loc": 11,
+      "doc": "Возвращает предел и величину недопустимого расхождения длительностей.",
+      "calls": [],
+      "called_by": [
+        "_split_file_into_stage",
+        "convert_single_file",
+        "process_single_folder",
+        "split_long_video_to_outputs",
+        "validate_merged_video"
+      ],
+      "module": "videovaudio/core/audio_contract.py"
+    },
+    "expected_audio_profile": {
+      "class": "AudioContractMixin",
+      "line_start": 26,
+      "line_end": 33,
+      "loc": 8,
+      "doc": "Единый профиль MP3, обязательный для безопасной concat-склейки.",
+      "calls": [],
+      "called_by": [
+        "process_single_folder"
+      ],
+      "module": "videovaudio/core/audio_contract.py"
+    },
+    "audio_profile_key": {
+      "class": "AudioContractMixin",
+      "line_start": 35,
+      "line_end": 41,
+      "loc": 7,
+      "doc": "Компактный ключ аудиопрофиля для JSON-сводки.",
+      "calls": [],
+      "called_by": [
+        "process_single_folder"
+      ],
+      "module": "videovaudio/core/audio_contract.py"
+    },
+    "audio_profile_matches_target": {
+      "class": "AudioContractMixin",
+      "line_start": 43,
+      "line_end": 50,
+      "loc": 8,
+      "doc": "Проверяет важные для concat параметры фактически созданного MP3.",
+      "calls": [],
+      "called_by": [
+        "process_single_folder"
+      ],
+      "module": "videovaudio/core/audio_contract.py"
+    },
+    "save_concat_input_manifest": {
+      "class": "AudioContractMixin",
+      "line_start": 52,
+      "line_end": 98,
+      "loc": 47,
+      "doc": "Сохраняет полный компактный порядок MP3 только при проблеме склейки.",
+      "calls": [
+        "atomic_write_json",
+        "safe_log_fragment"
+      ],
+      "called_by": [
+        "process_single_folder"
+      ],
+      "module": "videovaudio/core/audio_contract.py"
+    },
+    "trim_text": {
+      "class": "FFmpegUtilsMixin",
+      "line_start": 14,
+      "line_end": 24,
+      "loc": 11,
+      "doc": "Обрезает длинный текст, сохраняя важное начало или окончание.",
+      "calls": [],
+      "called_by": [
+        "_split_file_into_stage",
+        "diagnostic_excerpt",
+        "get_audio_info",
+        "process_single_folder",
+        "record_diagnostic_failure",
+        "sanitize_problem_value",
+        "write_problem"
+      ],
+      "module": "videovaudio/core/ffmpeg.py"
+    },
+    "diagnostic_excerpt": {
+      "class": "FFmpegUtilsMixin",
+      "line_start": 26,
+      "line_end": 71,
+      "loc": 46,
+      "doc": "Убирает из вывода FFmpeg повторяющийся служебный шум и оставляет причину.",
+      "calls": [
+        "trim_text"
+      ],
+      "called_by": [
+        "sanitize_problem_value"
+      ],
+      "module": "videovaudio/core/ffmpeg.py"
+    },
+    "normalize_returncode": {
+      "class": "FFmpegUtilsMixin",
+      "line_start": 73,
+      "line_end": 77,
+      "loc": 5,
+      "doc": "Преобразует беззнаковый Windows-код FFmpeg в обычное отрицательное число.",
+      "calls": [],
+      "called_by": [
+        "process_single_folder",
+        "run_process",
+        "write_problem"
+      ],
+      "module": "videovaudio/core/ffmpeg.py"
+    },
+    "ensure_windows_child_error_mode": {
+      "class": "FFmpegUtilsMixin",
+      "line_start": 79,
+      "line_end": 105,
+      "loc": 27,
+      "doc": "Не даёт Windows Error Reporting удерживать упавшие FFmpeg и их файлы.",
+      "calls": [],
+      "called_by": [
+        "run_process"
+      ],
+      "module": "videovaudio/core/ffmpeg.py"
+    },
+    "is_libmp3lame_joint_stereo_assertion": {
+      "class": "FFmpegUtilsMixin",
+      "line_start": 107,
+      "line_end": 116,
+      "loc": 10,
+      "doc": "Распознаёт фатальный assertion LAME, после которого процесс может зависнуть в Windows.",
+      "calls": [],
+      "called_by": [
+        "diagnose_ffmpeg_failure",
+        "run_process"
+      ],
+      "module": "videovaudio/core/ffmpeg.py"
+    },
+    "diagnose_ffmpeg_failure": {
+      "class": "FFmpegUtilsMixin",
+      "line_start": 118,
+      "line_end": 283,
+      "loc": 166,
+      "doc": "Классифицирует типовые причины FFmpeg и даёт Codex направление исправления.",
+      "calls": [
+        "is_libmp3lame_joint_stereo_assertion",
+        "path_facts"
+      ],
+      "called_by": [
+        "convert_single_file"
+      ],
+      "module": "videovaudio/core/ffmpeg.py"
+    },
+    "ffmpeg_base_command": {
+      "class": "FFmpegUtilsMixin",
+      "line_start": 285,
+      "line_end": 292,
+      "loc": 8,
+      "doc": "Базовые параметры FFmpeg без баннера, прогресса и многомегабайтного шума.",
+      "calls": [],
+      "called_by": [
+        "_split_file_into_stage",
+        "build_video_normalize_command",
+        "concat_video_files_copy",
+        "convert_single_file",
+        "process_single_folder"
+      ],
+      "module": "videovaudio/core/ffmpeg.py"
+    },
+    "extract_duration_seconds": {
+      "class": "FFmpegUtilsMixin",
+      "line_start": 294,
+      "line_end": 307,
+      "loc": 14,
+      "doc": "Достаёт числовую длительность из вывода ffprobe, даже если вывод лежит в process-log.",
+      "calls": [],
+      "called_by": [],
+      "module": "videovaudio/core/ffmpeg.py"
+    },
+    "command_to_text": {
+      "class": "FFmpegUtilsMixin",
+      "line_start": 309,
+      "line_end": 318,
+      "loc": 10,
+      "doc": "Пишет команду ffmpeg/ffprobe в понятном виде без запуска через shell.",
+      "calls": [],
+      "called_by": [
+        "_split_file_into_stage",
+        "convert_single_file",
+        "get_audio_info",
+        "process_single_folder",
+        "run_process",
+        "write_problem"
+      ],
+      "module": "videovaudio/core/ffmpeg.py"
+    },
+    "path_facts": {
+      "class": "PathUtilsMixin",
+      "line_start": 14,
+      "line_end": 42,
+      "loc": 29,
+      "doc": "Компактные факты о пути, полезные при ошибках доступа и длинных путях.",
+      "calls": [],
+      "called_by": [
+        "convert_single_file",
+        "diagnose_ffmpeg_failure",
+        "process_single_folder"
+      ],
+      "module": "videovaudio/core/paths.py"
+    },
+    "build_output_path": {
+      "class": "PathUtilsMixin",
+      "line_start": 44,
+      "line_end": 53,
+      "loc": 10,
+      "doc": "Формирует понятное имя результата, но не превышает безопасную длину пути.",
+      "calls": [
+        "safe_output_stem"
+      ],
+      "called_by": [
+        "build_audio_split_output_path",
+        "convert_single_file"
+      ],
+      "module": "videovaudio/core/paths.py"
+    },
+    "build_audio_split_output_path": {
+      "class": "PathUtilsMixin",
+      "line_start": 55,
+      "line_end": 73,
+      "loc": 19,
+      "doc": "Именует одиночный MP3 по курсу, а набор — пронумерованными частями.",
+      "calls": [
+        "build_output_path",
+        "safe_output_stem"
+      ],
+      "called_by": [
+        "_split_file_into_stage",
+        "process_single_folder"
+      ],
+      "module": "videovaudio/core/paths.py"
+    },
+    "read_text_tail": {
+      "class": "PathUtilsMixin",
+      "line_start": 75,
+      "line_end": 92,
+      "loc": 18,
+      "doc": "Читает хвост большого лога процесса без риска загрузить гигабайтный файл.",
+      "calls": [],
+      "called_by": [
+        "run_process"
+      ],
+      "module": "videovaudio/core/paths.py"
+    },
+    "safe_log_fragment": {
+      "class": "PathUtilsMixin",
+      "line_start": 94,
+      "line_end": 100,
+      "loc": 7,
+      "doc": "Безопасный фрагмент имени файла для логов ffmpeg/ffprobe.",
+      "calls": [],
+      "called_by": [
+        "concat_video_files_copy",
+        "make_process_log_path",
+        "process_video_folder",
+        "save_concat_input_manifest"
+      ],
+      "module": "videovaudio/core/paths.py"
+    },
+    "safe_output_stem": {
+      "class": "PathUtilsMixin",
+      "line_start": 102,
+      "line_end": 109,
+      "loc": 8,
+      "doc": "Безопасное имя MP3 без слишком длинных путей Windows.",
+      "calls": [],
+      "called_by": [
+        "build_audio_split_output_path",
+        "build_output_path"
+      ],
+      "module": "videovaudio/core/paths.py"
+    },
+    "normalize_folder_key": {
+      "class": "PathUtilsMixin",
+      "line_start": 111,
+      "line_end": 113,
+      "loc": 3,
+      "doc": "Ключ для сравнения путей очереди без дублей вида C:\\A и c:\\a\\.",
+      "calls": [],
+      "called_by": [
+        "_add_folder_to_queue",
+        "_remove_duplicates",
+        "process_queue",
+        "process_video_queue"
+      ],
+      "module": "videovaudio/core/paths.py"
+    },
+    "normalize_folder_path": {
+      "class": "PathUtilsMixin",
+      "line_start": 115,
+      "line_end": 117,
+      "loc": 3,
+      "doc": "Возвращает единый абсолютный Windows-путь для очереди и логов.",
+      "calls": [],
+      "called_by": [
+        "_add_folder_to_queue",
+        "process_single_folder",
+        "process_video_folder",
+        "scan_media_files"
+      ],
+      "module": "videovaudio/core/paths.py"
+    },
+    "escape_concat_path": {
+      "class": "PathUtilsMixin",
+      "line_start": 119,
+      "line_end": 122,
+      "loc": 4,
+      "doc": "Экранирует путь для ffmpeg concat demuxer.",
+      "calls": [],
+      "called_by": [
+        "concat_video_files_copy",
+        "process_single_folder"
+      ],
+      "module": "videovaudio/core/paths.py"
+    },
+    "diagnostic_status_counts": {
+      "class": "CodexReportMixin",
+      "line_start": 16,
+      "line_end": 29,
+      "loc": 14,
+      "doc": "Считает восстановленные, ожидаемые и нерешённые события.",
+      "calls": [],
+      "called_by": [
+        "build_health_record",
+        "diagnostics_integrity",
+        "run_index_payload",
+        "save_run_summary"
+      ],
+      "module": "videovaudio/diagnostics/codex_report.py"
+    },
+    "compact_event_for_report": {
+      "class": "CodexReportMixin",
+      "line_start": 31,
+      "line_end": 62,
+      "loc": 32,
+      "doc": "Оставляет в Codex-отчёте только поля, нужные для приоритизации.",
+      "calls": [],
+      "called_by": [
+        "build_codex_report"
+      ],
+      "module": "videovaudio/diagnostics/codex_report.py"
+    },
+    "build_codex_report": {
+      "class": "CodexReportMixin",
+      "line_start": 64,
+      "line_end": 315,
+      "loc": 252,
+      "doc": "Формирует конкретный порядок анализа, а не общий список советов.",
+      "calls": [
+        "compact_event_for_report",
+        "diagnostic_health_snapshot",
+        "read_recent_health_records"
+      ],
+      "called_by": [
+        "save_run_summary"
+      ],
+      "module": "videovaudio/diagnostics/codex_report.py"
+    },
+    "now_iso": {
+      "class": "DiagnosticsCommonMixin",
+      "line_start": 23,
+      "line_end": 25,
+      "loc": 3,
+      "doc": "Локальное время с часовым поясом для сопоставления разных компьютеров.",
+      "calls": [],
+      "called_by": [
+        "begin_run_diagnostics",
+        "build_health_record",
+        "finish_active_run",
+        "install_exception_hooks",
+        "on_close",
+        "process_queue",
+        "process_single_folder",
+        "process_video_folder",
+        "process_video_queue",
+        "record_diagnostic_failure",
+        "run_index_payload",
+        "run_process",
+        "setup_logging",
+        "update_active_state",
+        "write_problem"
+      ],
+      "module": "videovaudio/diagnostics/common.py"
+    },
+    "utc_now_iso": {
+      "class": "DiagnosticsCommonMixin",
+      "line_start": 27,
+      "line_end": 29,
+      "loc": 3,
+      "doc": "UTC-время события для машинной сортировки.",
+      "calls": [],
+      "called_by": [
+        "begin_run_diagnostics",
+        "finish_active_run",
+        "on_close",
+        "run_index_payload",
+        "setup_logging",
+        "update_active_state",
+        "write_problem"
+      ],
+      "module": "videovaudio/diagnostics/common.py"
+    },
+    "sha256_file": {
+      "class": "DiagnosticsCommonMixin",
+      "line_start": 31,
+      "line_end": 40,
+      "loc": 10,
+      "doc": "Потоково вычисляет отпечаток программы без загрузки файла целиком.",
+      "calls": [],
+      "called_by": [
+        "get_source_identity"
+      ],
+      "module": "videovaudio/diagnostics/common.py"
+    },
+    "problem_guidance": {
+      "class": "ProblemEventsMixin",
+      "line_start": 23,
+      "line_end": 81,
+      "loc": 59,
+      "doc": "Единые пояснения, чтобы Codex видел влияние и следующий шаг.",
+      "calls": [],
+      "called_by": [
+        "write_problem"
+      ],
+      "module": "videovaudio/diagnostics/events.py"
+    },
+    "sanitize_problem_value": {
+      "class": "ProblemEventsMixin",
+      "line_start": 83,
+      "line_end": 128,
+      "loc": 46,
+      "doc": "Не даёт одной ошибке раздуть JSONL до мегабайт.",
+      "calls": [
+        "diagnostic_excerpt",
+        "sanitize_problem_value",
+        "trim_text"
+      ],
+      "called_by": [
+        "sanitize_problem_value",
+        "write_problem"
+      ],
+      "module": "videovaudio/diagnostics/events.py"
+    },
+    "error_signature": {
+      "class": "ProblemEventsMixin",
+      "line_start": 130,
+      "line_end": 164,
+      "loc": 35,
+      "doc": "Стабильная сигнатура группирует одинаковые сбои без привязки к путям.",
+      "calls": [],
+      "called_by": [
+        "write_problem"
+      ],
+      "module": "videovaudio/diagnostics/events.py"
+    },
+    "default_resolution_status": {
+      "class": "ProblemEventsMixin",
+      "line_start": 166,
+      "line_end": 178,
+      "loc": 13,
+      "doc": "Отделяет реальные дефекты программы от ожидаемых пропусков и повторов.",
+      "calls": [],
+      "called_by": [
+        "write_problem"
+      ],
+      "module": "videovaudio/diagnostics/events.py"
+    },
+    "write_problem": {
+      "class": "ProblemEventsMixin",
+      "line_start": 180,
+      "line_end": 396,
+      "loc": 217,
+      "doc": "Записывает структурированное событие, дедуплицирует повторы и возвращает event_id.",
+      "calls": [
+        "command_to_text",
+        "default_resolution_status",
+        "error_signature",
+        "normalize_returncode",
+        "now_iso",
+        "problem_guidance",
+        "record_diagnostic_failure",
+        "resource_snapshot",
+        "sanitize_problem_value",
+        "trim_text",
+        "utc_now_iso"
+      ],
+      "called_by": [
+        "__init__",
+        "_split_file_into_stage",
+        "convert_single_file",
+        "create_video_group_output",
+        "get_audio_info",
+        "get_video_info",
+        "install_exception_hooks",
+        "mark_problem_recovered",
+        "mark_problem_unresolved",
+        "normalize_video_file",
+        "process_queue",
+        "process_single_folder",
+        "process_video_folder",
+        "process_video_queue",
+        "run_process",
+        "save_run_summary",
+        "scan_media_files",
+        "setup_logging",
+        "split_file",
+        "split_long_video_to_outputs",
+        "start",
+        "start_video_merge"
+      ],
+      "module": "videovaudio/diagnostics/events.py"
+    },
+    "mark_problem_recovered": {
+      "class": "ProblemEventsMixin",
+      "line_start": 398,
+      "line_end": 412,
+      "loc": 15,
+      "doc": "Связывает исходную проблему с успешным результатом повторной попытки.",
+      "calls": [
+        "write_problem"
+      ],
+      "called_by": [
+        "_split_file_into_stage",
+        "convert_single_file",
+        "create_video_group_output",
+        "process_single_folder"
+      ],
+      "module": "videovaudio/diagnostics/events.py"
+    },
+    "mark_problem_unresolved": {
+      "class": "ProblemEventsMixin",
+      "line_start": 414,
+      "line_end": 428,
+      "loc": 15,
+      "doc": "Фиксирует неуспешное восстановление с привязкой к исходному событию.",
+      "calls": [
+        "write_problem"
+      ],
+      "called_by": [
+        "_split_file_into_stage",
+        "convert_single_file",
+        "create_video_group_output",
+        "process_single_folder"
+      ],
+      "module": "videovaudio/diagnostics/events.py"
+    },
+    "read_recent_health_records": {
+      "class": "DiagnosticsHealthHistoryMixin",
+      "line_start": 16,
+      "line_end": 35,
+      "loc": 20,
+      "doc": "Читает небольшой хвост истории качества без загрузки лишних данных.",
+      "calls": [],
+      "called_by": [
+        "append_health_record",
+        "build_codex_report"
+      ],
+      "module": "videovaudio/diagnostics/health.py"
+    },
+    "build_health_record": {
+      "class": "DiagnosticsHealthHistoryMixin",
+      "line_start": 37,
+      "line_end": 148,
+      "loc": 112,
+      "doc": "Одна компактная строка на запуск для поиска регрессий.",
+      "calls": [
+        "diagnostic_status_counts",
+        "get_log_storage_stats",
+        "now_iso"
+      ],
+      "called_by": [
+        "save_run_summary"
+      ],
+      "module": "videovaudio/diagnostics/health.py"
+    },
+    "append_health_record": {
+      "class": "DiagnosticsHealthHistoryMixin",
+      "line_start": 150,
+      "line_end": 172,
+      "loc": 23,
+      "doc": "Хранит до 120 дней компактной истории качества.",
+      "calls": [
+        "atomic_write_text",
+        "read_recent_health_records"
+      ],
+      "called_by": [
+        "save_run_summary"
+      ],
+      "module": "videovaudio/diagnostics/health.py"
+    },
+    "diagnostics_integrity": {
+      "class": "DiagnosticsIntegrityMixin",
+      "line_start": 16,
+      "line_end": 243,
+      "loc": 228,
+      "doc": "Проверяет синтаксис файлов и смысловую согласованность итогов.",
+      "calls": [
+        "diagnostic_health_snapshot",
+        "diagnostic_status_counts"
+      ],
+      "called_by": [
+        "save_run_summary"
+      ],
+      "module": "videovaudio/diagnostics/integrity.py"
+    },
+    "ensure_diagnostic_io_state": {
+      "class": "DiagnosticsIOHealthMixin",
+      "line_start": 23,
+      "line_end": 32,
+      "loc": 10,
+      "doc": "Лениво создаёт блокировки и счётчики для служебной диагностики.",
+      "calls": [],
+      "called_by": [
+        "diagnostic_health_snapshot",
+        "record_diagnostic_failure",
+        "record_diagnostic_retry",
+        "reset_run_diagnostics",
+        "update_active_state"
+      ],
+      "module": "videovaudio/diagnostics/io_health.py"
+    },
+    "active_state_temp_files": {
+      "class": "DiagnosticsIOHealthMixin",
+      "line_start": 34,
+      "line_end": 58,
+      "loc": 25,
+      "doc": "Возвращает только временные файлы active_run_state этой программы.",
+      "calls": [],
+      "called_by": [
+        "diagnostic_health_snapshot"
+      ],
+      "module": "videovaudio/diagnostics/io_health.py"
+    },
+    "record_diagnostic_failure": {
+      "class": "DiagnosticsIOHealthMixin",
+      "line_start": 60,
+      "line_end": 110,
+      "loc": 51,
+      "doc": "Агрегирует сбои самой диагностики без рекурсивной записи в JSONL.",
+      "calls": [
+        "ensure_diagnostic_io_state",
+        "now_iso",
+        "trim_text"
+      ],
+      "called_by": [
+        "cleanup_own_atomic_temp",
+        "update_active_state",
+        "write_problem"
+      ],
+      "module": "videovaudio/diagnostics/io_health.py"
+    },
+    "record_diagnostic_retry": {
+      "class": "DiagnosticsIOHealthMixin",
+      "line_start": 112,
+      "line_end": 118,
+      "loc": 7,
+      "doc": "Считает успешные повторы атомарной замены без лишних строк лога.",
+      "calls": [
+        "ensure_diagnostic_io_state"
+      ],
+      "called_by": [
+        "update_active_state"
+      ],
+      "module": "videovaudio/diagnostics/io_health.py"
+    },
+    "diagnostic_health_snapshot": {
+      "class": "DiagnosticsIOHealthMixin",
+      "line_start": 120,
+      "line_end": 155,
+      "loc": 36,
+      "doc": "Формирует компактный итог надёжности служебных файлов запуска.",
+      "calls": [
+        "active_state_temp_files",
+        "ensure_diagnostic_io_state"
+      ],
+      "called_by": [
+        "build_codex_report",
+        "diagnostics_integrity",
+        "save_run_summary"
+      ],
+      "module": "videovaudio/diagnostics/io_health.py"
+    },
+    "update_active_state": {
+      "class": "DiagnosticsLifecycleMixin",
+      "line_start": 23,
+      "line_end": 96,
+      "loc": 74,
+      "doc": "Атомарно обновляет небольшой снимок выполняемой операции.",
+      "calls": [
+        "atomic_write_json",
+        "ensure_diagnostic_io_state",
+        "now_iso",
+        "record_diagnostic_failure",
+        "record_diagnostic_retry",
+        "utc_now_iso"
+      ],
+      "called_by": [
+        "finish_active_run",
+        "heartbeat_loop",
+        "install_exception_hooks",
+        "on_close",
+        "process_queue",
+        "process_single_folder",
+        "process_video_folder",
+        "process_video_queue",
+        "run_process",
+        "setup_logging"
+      ],
+      "module": "videovaudio/diagnostics/lifecycle.py"
+    },
+    "heartbeat_loop": {
+      "class": "DiagnosticsLifecycleMixin",
+      "line_start": 98,
+      "line_end": 104,
+      "loc": 7,
+      "doc": "Перезаписывает active_run_state.json, не создавая растущий лог.",
+      "calls": [
+        "sample_run_resources",
+        "update_active_state"
+      ],
+      "called_by": [],
+      "module": "videovaudio/diagnostics/lifecycle.py"
+    },
+    "start_heartbeat": {
+      "class": "DiagnosticsLifecycleMixin",
+      "line_start": 106,
+      "line_end": 119,
+      "loc": 14,
+      "doc": "Запускает один фоновый heartbeat на время очереди.",
+      "calls": [],
+      "called_by": [
+        "process_queue",
+        "process_video_queue"
+      ],
+      "module": "videovaudio/diagnostics/lifecycle.py"
+    },
+    "stop_heartbeat": {
+      "class": "DiagnosticsLifecycleMixin",
+      "line_start": 121,
+      "line_end": 132,
+      "loc": 12,
+      "doc": "Останавливает heartbeat до записи окончательного состояния.",
+      "calls": [],
+      "called_by": [
+        "finish_active_run",
+        "on_close"
+      ],
+      "module": "videovaudio/diagnostics/lifecycle.py"
+    },
+    "clear_active_transient_state": {
+      "class": "DiagnosticsLifecycleMixin",
+      "line_start": 134,
+      "line_end": 163,
+      "loc": 30,
+      "doc": "Убирает временные пути и PID после завершения, оставляя краткий итог.",
+      "calls": [],
+      "called_by": [
+        "finish_active_run",
+        "on_close"
+      ],
+      "module": "videovaudio/diagnostics/lifecycle.py"
+    },
+    "finish_active_run": {
+      "class": "DiagnosticsLifecycleMixin",
+      "line_start": 165,
+      "line_end": 176,
+      "loc": 12,
+      "doc": "Фиксирует терминальное состояние и останавливает heartbeat.",
+      "calls": [
+        "clear_active_transient_state",
+        "now_iso",
+        "stop_heartbeat",
+        "update_active_state",
+        "utc_now_iso"
+      ],
+      "called_by": [
+        "on_close",
+        "process_queue",
+        "process_video_queue"
+      ],
+      "module": "videovaudio/diagnostics/lifecycle.py"
+    },
+    "install_exception_hooks": {
+      "class": "DiagnosticsLifecycleMixin",
+      "line_start": 178,
+      "line_end": 271,
+      "loc": 94,
+      "doc": "Ловит необработанные ошибки главного, Tkinter и рабочих потоков.",
+      "calls": [
+        "now_iso",
+        "original_sys_excepthook",
+        "original_threading_excepthook",
+        "update_active_state",
+        "write_problem"
+      ],
+      "called_by": [
+        "__init__"
+      ],
+      "module": "videovaudio/diagnostics/lifecycle.py"
+    },
+    "on_close": {
+      "class": "DiagnosticsLifecycleMixin",
+      "line_start": 273,
+      "line_end": 332,
+      "loc": 60,
+      "doc": "Корректно помечает обычное закрытие, чтобы не спутать его с падением.",
+      "calls": [
+        "clear_active_transient_state",
+        "finish_active_run",
+        "now_iso",
+        "request_cancel",
+        "stop_heartbeat",
+        "terminate_active_processes",
+        "update_active_state",
+        "update_current_session",
+        "utc_now_iso"
+      ],
+      "called_by": [],
+      "module": "videovaudio/diagnostics/lifecycle.py"
+    },
+    "system_resource_sample": {
+      "class": "DiagnosticsResourcesMixin",
+      "line_start": 23,
+      "line_end": 108,
+      "loc": 86,
+      "doc": "Снимает память, CPU и свободное место без внешних зависимостей.",
+      "calls": [],
+      "called_by": [
+        "resource_snapshot",
+        "sample_run_resources"
+      ],
+      "module": "videovaudio/diagnostics/resources.py"
+    },
+    "resource_snapshot": {
+      "class": "DiagnosticsResourcesMixin",
+      "line_start": 110,
+      "line_end": 118,
+      "loc": 9,
+      "doc": "Компактные ресурсы системы в момент проблемы.",
+      "calls": [
+        "system_resource_sample"
+      ],
+      "called_by": [
+        "write_problem"
+      ],
+      "module": "videovaudio/diagnostics/resources.py"
+    },
+    "reset_run_resource_metrics": {
+      "class": "DiagnosticsResourcesMixin",
+      "line_start": 120,
+      "line_end": 137,
+      "loc": 18,
+      "doc": "Начинает компактное агрегирование ресурсов для текущей очереди.",
+      "calls": [
+        "sample_run_resources"
+      ],
+      "called_by": [
+        "process_queue",
+        "process_video_queue"
+      ],
+      "module": "videovaudio/diagnostics/resources.py"
+    },
+    "sample_run_resources": {
+      "class": "DiagnosticsResourcesMixin",
+      "line_start": 139,
+      "line_end": 219,
+      "loc": 81,
+      "doc": "Обновляет агрегаты; отдельные heartbeat-снимки в лог не добавляет.",
+      "calls": [
+        "system_resource_sample"
+      ],
+      "called_by": [
+        "heartbeat_loop",
+        "reset_run_resource_metrics",
+        "run_resource_metrics_summary"
+      ],
+      "module": "videovaudio/diagnostics/resources.py"
+    },
+    "run_resource_metrics_summary": {
+      "class": "DiagnosticsResourcesMixin",
+      "line_start": 221,
+      "line_end": 269,
+      "loc": 49,
+      "doc": "Возвращает только итоговые агрегаты, сохраняя лог маленьким.",
+      "calls": [
+        "sample_run_resources"
+      ],
+      "called_by": [
+        "process_queue",
+        "process_video_queue"
+      ],
+      "module": "videovaudio/diagnostics/resources.py"
+    },
+    "reset_run_diagnostics": {
+      "class": "RunReportsMixin",
+      "line_start": 16,
+      "line_end": 28,
+      "loc": 13,
+      "doc": "Начинает независимый набор событий для новой очереди.",
+      "calls": [
+        "ensure_diagnostic_io_state"
+      ],
+      "called_by": [
+        "begin_run_diagnostics"
+      ],
+      "module": "videovaudio/diagnostics/run_reports.py"
+    },
+    "begin_run_diagnostics": {
+      "class": "RunReportsMixin",
+      "line_start": 30,
+      "line_end": 67,
+      "loc": 38,
+      "doc": "Создаёт отдельные problem/summary/report-файлы для текущего run_id.",
+      "calls": [
+        "atomic_write_json",
+        "atomic_write_text",
+        "now_iso",
+        "reset_run_diagnostics",
+        "utc_now_iso"
+      ],
+      "called_by": [
+        "process_queue",
+        "process_video_queue"
+      ],
+      "module": "videovaudio/diagnostics/run_reports.py"
+    },
+    "run_index_payload": {
+      "class": "RunReportsMixin",
+      "line_start": 69,
+      "line_end": 141,
+      "loc": 73,
+      "doc": "Компактный индекс файлов и итоговых счётчиков запуска.",
+      "calls": [
+        "diagnostic_status_counts",
+        "now_iso",
+        "utc_now_iso"
+      ],
+      "called_by": [
+        "update_current_session",
+        "update_latest_run"
+      ],
+      "module": "videovaudio/diagnostics/run_reports.py"
+    },
+    "update_current_session": {
+      "class": "RunReportsMixin",
+      "line_start": 143,
+      "line_end": 150,
+      "loc": 8,
+      "doc": "Обновляет состояние открытого приложения, не затирая последний итог.",
+      "calls": [
+        "atomic_write_json",
+        "run_index_payload"
+      ],
+      "called_by": [
+        "on_close",
+        "process_queue",
+        "process_video_queue",
+        "setup_logging",
+        "update_latest_run"
+      ],
+      "module": "videovaudio/diagnostics/run_reports.py"
+    },
+    "update_latest_run": {
+      "class": "RunReportsMixin",
+      "line_start": 152,
+      "line_end": 157,
+      "loc": 6,
+      "doc": "Сохраняет постоянный указатель только на завершённый запуск.",
+      "calls": [
+        "atomic_write_json",
+        "run_index_payload",
+        "update_current_session"
+      ],
+      "called_by": [
+        "save_run_summary"
+      ],
+      "module": "videovaudio/diagnostics/run_reports.py"
+    },
+    "build_markdown_report": {
+      "class": "RunReportsMixin",
+      "line_start": 159,
+      "line_end": 307,
+      "loc": 149,
+      "doc": "Формирует короткий человекочитаемый итог без тяжёлой диагностики.",
+      "calls": [],
+      "called_by": [
+        "save_run_summary"
+      ],
+      "module": "videovaudio/diagnostics/run_reports.py"
+    },
+    "save_run_summary": {
+      "class": "RunReportsMixin",
+      "line_start": 309,
+      "line_end": 389,
+      "loc": 81,
+      "doc": "Сохраняет итог запуска в JSON, чтобы нейросети было легко понять состояние.",
+      "calls": [
+        "append_health_record",
+        "atomic_write_json",
+        "atomic_write_text",
+        "build_codex_report",
+        "build_health_record",
+        "build_markdown_report",
+        "diagnostic_health_snapshot",
+        "diagnostic_status_counts",
+        "diagnostics_integrity",
+        "get_log_storage_stats",
+        "update_latest_run",
+        "write_problem"
+      ],
+      "called_by": [
+        "process_queue",
+        "process_video_queue"
+      ],
+      "module": "videovaudio/diagnostics/run_reports.py"
+    },
+    "browse_folder": {
+      "class": "MultipleSelectionDialog",
+      "line_start": 95,
+      "line_end": 99,
+      "loc": 5,
+      "doc": "Выбор базовой папки для просмотра",
+      "calls": [
+        "load_folders"
+      ],
+      "called_by": [],
+      "module": "videovaudio/dialogs.py"
+    },
+    "load_folders": {
+      "class": "MultipleSelectionDialog",
+      "line_start": 101,
+      "line_end": 122,
+      "loc": 22,
+      "doc": "Загрузка папок из выбранного пути",
+      "calls": [],
+      "called_by": [
+        "__init__",
+        "browse_folder"
+      ],
+      "module": "videovaudio/dialogs.py"
+    },
+    "on_selection_changed": {
+      "class": "MultipleSelectionDialog",
+      "line_start": 124,
+      "line_end": 127,
+      "loc": 4,
+      "doc": "Обновление информации о выборе",
+      "calls": [],
+      "called_by": [],
+      "module": "videovaudio/dialogs.py"
+    },
+    "select_all": {
+      "class": "MultipleSelectionDialog",
+      "line_start": 129,
+      "line_end": 132,
+      "loc": 4,
+      "doc": "Выбрать все папки",
+      "calls": [],
+      "called_by": [],
+      "module": "videovaudio/dialogs.py"
+    },
+    "deselect_all": {
+      "class": "MultipleSelectionDialog",
+      "line_start": 134,
+      "line_end": 136,
+      "loc": 3,
+      "doc": "Снять выбор со всех папок",
+      "calls": [],
+      "called_by": [],
+      "module": "videovaudio/dialogs.py"
+    },
+    "add_selected": {
+      "class": "MultipleSelectionDialog",
+      "line_start": 138,
+      "line_end": 218,
+      "loc": 81,
+      "doc": "Добавить выбранные папки в очередь",
+      "calls": [],
+      "called_by": [],
+      "module": "videovaudio/dialogs.py"
+    },
+    "show": {
+      "class": "CompletionNotification",
+      "line_start": 48,
+      "line_end": 102,
+      "loc": 55,
+      "doc": "",
+      "calls": [
+        "open_file"
+      ],
+      "called_by": [],
+      "module": "videovaudio/notifications.py"
+    },
+    "open_file": {
+      "class": "CompletionNotification",
+      "line_start": 104,
+      "line_end": 110,
+      "loc": 7,
+      "doc": "",
+      "calls": [],
+      "called_by": [
+        "show"
+      ],
+      "module": "videovaudio/notifications.py"
+    },
+    "close": {
+      "class": "CompletionNotification",
+      "line_start": 112,
+      "line_end": 114,
+      "loc": 3,
+      "doc": "",
+      "calls": [],
+      "called_by": [],
+      "module": "videovaudio/notifications.py"
+    },
+    "compact_process_log": {
+      "class": "ProcessRunnerMixin",
+      "line_start": 16,
+      "line_end": 47,
+      "loc": 32,
+      "doc": "Ограничивает сохранённый ошибочный вывод процесса без потери начала и хвоста.",
+      "calls": [],
+      "called_by": [
+        "run_process"
+      ],
+      "module": "videovaudio/process_runner.py"
+    },
+    "remove_success_process_log": {
+      "class": "ProcessRunnerMixin",
+      "line_start": 49,
+      "line_end": 60,
+      "loc": 12,
+      "doc": "Успешный служебный вывод не хранится: полезные метрики уже есть в итоговом JSON.",
+      "calls": [],
+      "called_by": [
+        "run_process"
+      ],
+      "module": "videovaudio/process_runner.py"
+    },
+    "make_process_log_path": {
+      "class": "ProcessRunnerMixin",
+      "line_start": 62,
+      "line_end": 70,
+      "loc": 9,
+      "doc": "Создаёт отдельный файл под полный вывод конкретного процесса.",
+      "calls": [
+        "safe_log_fragment"
+      ],
+      "called_by": [
+        "run_process"
+      ],
+      "module": "videovaudio/process_runner.py"
+    },
+    "completed_process": {
+      "class": "ProcessRunnerMixin",
+      "line_start": 72,
+      "line_end": 77,
+      "loc": 6,
+      "doc": "CompletedProcess с метаданными, нужными для диагностики Codex.",
+      "calls": [],
+      "called_by": [
+        "run_process"
+      ],
+      "module": "videovaudio/process_runner.py"
+    },
+    "terminate_process": {
+      "class": "ProcessRunnerMixin",
+      "line_start": 79,
+      "line_end": 104,
+      "loc": 26,
+      "doc": "Мгновенно останавливает ffmpeg/ffprobe процесс и дочерние процессы.",
+      "calls": [],
+      "called_by": [
+        "run_process",
+        "terminate_active_processes"
+      ],
+      "module": "videovaudio/process_runner.py"
+    },
+    "terminate_active_processes": {
+      "class": "ProcessRunnerMixin",
+      "line_start": 106,
+      "line_end": 112,
+      "loc": 7,
+      "doc": "Останавливает все текущие ffmpeg-процессы при нажатии отмены.",
+      "calls": [
+        "terminate_process"
+      ],
+      "called_by": [
+        "done",
+        "on_close",
+        "request_cancel"
+      ],
+      "module": "videovaudio/process_runner.py"
+    },
+    "request_cancel": {
+      "class": "ProcessRunnerMixin",
+      "line_start": 114,
+      "line_end": 121,
+      "loc": 8,
+      "doc": "Обработчик кнопки отмены.",
+      "calls": [
+        "log_message",
+        "set_status",
+        "terminate_active_processes"
+      ],
+      "called_by": [
+        "on_close"
+      ],
+      "module": "videovaudio/process_runner.py"
+    },
+    "run_process": {
+      "class": "ProcessRunnerMixin",
+      "line_start": 123,
+      "line_end": 380,
+      "loc": 258,
+      "doc": "Запускает процесс без PIPE-зависаний; хранит полный вывод только при сбое.",
+      "calls": [
+        "command_to_text",
+        "compact_process_log",
+        "completed_process",
+        "ensure_windows_child_error_mode",
+        "is_libmp3lame_joint_stereo_assertion",
+        "make_process_log_path",
+        "normalize_returncode",
+        "now_iso",
+        "read_text_tail",
+        "remove_success_process_log",
+        "terminate_process",
+        "update_active_state",
+        "write_problem"
+      ],
+      "called_by": [
+        "_split_file_into_stage",
+        "concat_video_files_copy",
+        "convert_single_file",
+        "get_audio_info",
+        "get_video_info",
+        "normalize_video_file",
+        "process_single_folder",
+        "split_long_video_to_outputs"
+      ],
+      "module": "videovaudio/process_runner.py"
+    },
+    "guard_queue_edit": {
+      "class": "QueueMixin",
+      "line_start": 14,
+      "line_end": 22,
+      "loc": 9,
+      "doc": "Запрещает менять очередь во время фоновой обработки.",
+      "calls": [],
+      "called_by": [
+        "_add_folder_to_queue",
+        "_clear_queue",
+        "_remove_duplicates",
+        "_remove_selected_from_queue",
+        "add_multiple_folders",
+        "add_multiple_video_folders"
+      ],
+      "module": "videovaudio/queues.py"
+    },
+    "set_queue_controls_state": {
+      "class": "QueueMixin",
+      "line_start": 24,
+      "line_end": 27,
+      "loc": 4,
+      "doc": "Включить/выключить кнопки изменения очереди.",
+      "calls": [],
+      "called_by": [
+        "done",
+        "start",
+        "start_video_merge"
+      ],
+      "module": "videovaudio/queues.py"
+    },
+    "set_video_settings_state": {
+      "class": "QueueMixin",
+      "line_start": 29,
+      "line_end": 33,
+      "loc": 5,
+      "doc": "Блокирует настройки на время любой фоновой обработки.",
+      "calls": [],
+      "called_by": [
+        "done",
+        "start",
+        "start_video_merge"
+      ],
+      "module": "videovaudio/queues.py"
+    },
+    "capture_video_settings": {
+      "class": "QueueMixin",
+      "line_start": 35,
+      "line_end": 51,
+      "loc": 17,
+      "doc": "Проверяет и фиксирует настройки до запуска рабочего потока.",
+      "calls": [],
+      "called_by": [
+        "start_video_merge"
+      ],
+      "module": "videovaudio/queues.py"
+    },
+    "get_folder_queue": {
+      "class": "QueueMixin",
+      "line_start": 53,
+      "line_end": 57,
+      "loc": 5,
+      "doc": "Возвращает независимую очередь выбранного режима.",
+      "calls": [],
+      "called_by": [
+        "_add_folder_to_queue",
+        "_clear_queue",
+        "_remove_duplicates",
+        "_remove_selected_from_queue",
+        "update_queue_display"
+      ],
+      "module": "videovaudio/queues.py"
+    },
+    "get_queue_widgets": {
+      "class": "QueueMixin",
+      "line_start": 59,
+      "line_end": 63,
+      "loc": 5,
+      "doc": "Возвращает список и информационную строку нужной вкладки.",
+      "calls": [],
+      "called_by": [
+        "_remove_selected_from_queue",
+        "update_queue_display"
+      ],
+      "module": "videovaudio/queues.py"
+    },
+    "_add_folder_to_queue": {
+      "class": "QueueMixin",
+      "line_start": 65,
+      "line_end": 108,
+      "loc": 44,
+      "doc": "",
+      "calls": [
+        "get_folder_queue",
+        "guard_queue_edit",
+        "log_message",
+        "normalize_folder_key",
+        "normalize_folder_path",
+        "scan_media_files",
+        "update_queue_display"
+      ],
+      "called_by": [
+        "add_folder_to_queue",
+        "add_video_folder_to_queue"
+      ],
+      "module": "videovaudio/queues.py"
+    },
+    "add_folder_to_queue": {
+      "class": "QueueMixin",
+      "line_start": 110,
+      "line_end": 112,
+      "loc": 3,
+      "doc": "Добавить одну папку в очередь",
+      "calls": [
+        "_add_folder_to_queue"
+      ],
+      "called_by": [],
+      "module": "videovaudio/queues.py"
+    },
+    "add_video_folder_to_queue": {
+      "class": "QueueMixin",
+      "line_start": 114,
+      "line_end": 116,
+      "loc": 3,
+      "doc": "Добавить папку курса в очередь объединения видео.",
+      "calls": [
+        "_add_folder_to_queue"
+      ],
+      "called_by": [],
+      "module": "videovaudio/queues.py"
+    },
+    "add_multiple_folders": {
+      "class": "QueueMixin",
+      "line_start": 118,
+      "line_end": 123,
+      "loc": 6,
+      "doc": "Добавить несколько папок через кастомное окно выбора",
+      "calls": [
+        "guard_queue_edit"
+      ],
+      "called_by": [],
+      "module": "videovaudio/queues.py"
+    },
+    "add_multiple_video_folders": {
+      "class": "QueueMixin",
+      "line_start": 125,
+      "line_end": 129,
+      "loc": 5,
+      "doc": "Добавить несколько курсов в очередь объединения видео.",
+      "calls": [
+        "guard_queue_edit"
+      ],
+      "called_by": [],
+      "module": "videovaudio/queues.py"
+    },
+    "_remove_selected_from_queue": {
+      "class": "QueueMixin",
+      "line_start": 131,
+      "line_end": 147,
+      "loc": 17,
+      "doc": "",
+      "calls": [
+        "get_folder_queue",
+        "get_queue_widgets",
+        "guard_queue_edit",
+        "log_message",
+        "update_queue_display"
+      ],
+      "called_by": [
+        "remove_selected_from_queue",
+        "remove_selected_from_video_queue"
+      ],
+      "module": "videovaudio/queues.py"
+    },
+    "remove_selected_from_queue": {
+      "class": "QueueMixin",
+      "line_start": 149,
+      "line_end": 151,
+      "loc": 3,
+      "doc": "Удалить выбранные папки из очереди",
+      "calls": [
+        "_remove_selected_from_queue"
+      ],
+      "called_by": [],
+      "module": "videovaudio/queues.py"
+    },
+    "remove_selected_from_video_queue": {
+      "class": "QueueMixin",
+      "line_start": 153,
+      "line_end": 155,
+      "loc": 3,
+      "doc": "Удалить выбранные курсы из видео-очереди.",
+      "calls": [
+        "_remove_selected_from_queue"
+      ],
+      "called_by": [],
+      "module": "videovaudio/queues.py"
+    },
+    "_clear_queue": {
+      "class": "QueueMixin",
+      "line_start": 157,
+      "line_end": 171,
+      "loc": 15,
+      "doc": "",
+      "calls": [
+        "get_folder_queue",
+        "guard_queue_edit",
+        "log_message",
+        "update_queue_display"
+      ],
+      "called_by": [
+        "clear_queue",
+        "clear_video_queue"
+      ],
+      "module": "videovaudio/queues.py"
+    },
+    "clear_queue": {
+      "class": "QueueMixin",
+      "line_start": 173,
+      "line_end": 175,
+      "loc": 3,
+      "doc": "Очистить всю очередь",
+      "calls": [
+        "_clear_queue"
+      ],
+      "called_by": [],
+      "module": "videovaudio/queues.py"
+    },
+    "clear_video_queue": {
+      "class": "QueueMixin",
+      "line_start": 177,
+      "line_end": 179,
+      "loc": 3,
+      "doc": "Очистить очередь объединения видео.",
+      "calls": [
+        "_clear_queue"
+      ],
+      "called_by": [],
+      "module": "videovaudio/queues.py"
+    },
+    "_remove_duplicates": {
+      "class": "QueueMixin",
+      "line_start": 181,
+      "line_end": 225,
+      "loc": 45,
+      "doc": "",
+      "calls": [
+        "get_folder_queue",
+        "guard_queue_edit",
+        "log_message",
+        "normalize_folder_key",
+        "update_queue_display"
+      ],
+      "called_by": [
+        "remove_duplicates",
+        "remove_video_duplicates"
+      ],
+      "module": "videovaudio/queues.py"
+    },
+    "remove_duplicates": {
+      "class": "QueueMixin",
+      "line_start": 227,
+      "line_end": 229,
+      "loc": 3,
+      "doc": "Удалить дубликаты и несуществующие папки из очереди",
+      "calls": [
+        "_remove_duplicates"
+      ],
+      "called_by": [],
+      "module": "videovaudio/queues.py"
+    },
+    "remove_video_duplicates": {
+      "class": "QueueMixin",
+      "line_start": 231,
+      "line_end": 233,
+      "loc": 3,
+      "doc": "Очистить видео-очередь от дубликатов и пропавших папок.",
+      "calls": [
+        "_remove_duplicates"
+      ],
+      "called_by": [],
+      "module": "videovaudio/queues.py"
+    },
+    "update_queue_display": {
+      "class": "QueueMixin",
+      "line_start": 235,
+      "line_end": 260,
+      "loc": 26,
+      "doc": "Обновить отображение очереди",
+      "calls": [
+        "get_files",
+        "get_folder_queue",
+        "get_queue_widgets"
+      ],
+      "called_by": [
+        "_add_folder_to_queue",
+        "_clear_queue",
+        "_remove_duplicates",
+        "_remove_selected_from_queue",
+        "process_video_queue"
+      ],
+      "module": "videovaudio/queues.py"
+    },
+    "process_queue": {
+      "class": "AudioRunMixin",
+      "line_start": 18,
+      "line_end": 325,
+      "loc": 308,
+      "doc": "Обработка всей очереди папок по снимку очереди на момент старта.",
+      "calls": [
+        "begin_run_diagnostics",
+        "finish_active_run",
+        "log_message",
+        "normalize_folder_key",
+        "now_iso",
+        "process_single_folder",
+        "reset_run_resource_metrics",
+        "run_resource_metrics_summary",
+        "save_run_summary",
+        "start_heartbeat",
+        "ui_after",
+        "update_active_state",
+        "update_current_session",
+        "write_problem"
+      ],
+      "called_by": [],
+      "module": "videovaudio/run/audio.py"
+    },
+    "start": {
+      "class": "AudioRunMixin",
+      "line_start": 327,
+      "line_end": 366,
+      "loc": 40,
+      "doc": "",
+      "calls": [
+        "log_message",
+        "set_queue_controls_state",
+        "set_status",
+        "set_video_settings_state",
+        "write_problem"
+      ],
+      "called_by": [],
+      "module": "videovaudio/run/audio.py"
+    },
+    "done": {
+      "class": "RunLifecycleMixin",
+      "line_start": 18,
+      "line_end": 51,
+      "loc": 34,
+      "doc": "",
+      "calls": [
+        "set_queue_controls_state",
+        "set_status",
+        "set_video_settings_state",
+        "show_completion_notification",
+        "terminate_active_processes",
+        "update_progress"
+      ],
+      "called_by": [],
+      "module": "videovaudio/run/lifecycle.py"
+    },
+    "process_video_queue": {
+      "class": "VideoRunMixin",
+      "line_start": 18,
+      "line_end": 238,
+      "loc": 221,
+      "doc": "Фоновая обработка независимой очереди объединения видео.",
+      "calls": [
+        "begin_run_diagnostics",
+        "finish_active_run",
+        "log_message",
+        "normalize_folder_key",
+        "now_iso",
+        "process_video_folder",
+        "reset_run_resource_metrics",
+        "run_resource_metrics_summary",
+        "save_run_summary",
+        "start_heartbeat",
+        "ui_after",
+        "update_active_state",
+        "update_current_session",
+        "update_queue_display",
+        "write_problem"
+      ],
+      "called_by": [],
+      "module": "videovaudio/run/video.py"
+    },
+    "start_video_merge": {
+      "class": "VideoRunMixin",
+      "line_start": 240,
+      "line_end": 301,
+      "loc": 62,
+      "doc": "Запускает независимую очередь объединения видео.",
+      "calls": [
+        "capture_video_settings",
+        "log_message",
+        "set_queue_controls_state",
+        "set_status",
+        "set_video_settings_state",
+        "write_problem"
+      ],
+      "called_by": [],
+      "module": "videovaudio/run/video.py"
+    },
+    "is_retryable_atomic_replace_error": {
+      "class": "AtomicStorageMixin",
+      "line_start": 26,
+      "line_end": 32,
+      "loc": 7,
+      "doc": "Определяет временные блокировки файла, характерные для Windows.",
+      "calls": [],
+      "called_by": [
+        "atomic_replace_with_retry"
+      ],
+      "module": "videovaudio/storage/atomic.py"
+    },
+    "atomic_replace_with_retry": {
+      "class": "AtomicStorageMixin",
+      "line_start": 34,
+      "line_end": 49,
+      "loc": 16,
+      "doc": "Ограниченно повторяет атомарную замену при временной блокировке.",
+      "calls": [
+        "is_retryable_atomic_replace_error"
+      ],
+      "called_by": [
+        "atomic_write_json",
+        "atomic_write_text",
+        "publish_video_outputs"
+      ],
+      "module": "videovaudio/storage/atomic.py"
+    },
+    "cleanup_own_atomic_temp": {
+      "class": "AtomicStorageMixin",
+      "line_start": 51,
+      "line_end": 62,
+      "loc": 12,
+      "doc": "Удаляет только временный файл текущей операции записи.",
+      "calls": [
+        "record_diagnostic_failure"
+      ],
+      "called_by": [
+        "atomic_write_json",
+        "atomic_write_text"
+      ],
+      "module": "videovaudio/storage/atomic.py"
+    },
+    "atomic_write_json": {
+      "class": "AtomicStorageMixin",
+      "line_start": 64,
+      "line_end": 77,
+      "loc": 14,
+      "doc": "Записывает важный JSON через временный файл и атомарную замену.",
+      "calls": [
+        "atomic_replace_with_retry",
+        "cleanup_own_atomic_temp"
+      ],
+      "called_by": [
+        "begin_run_diagnostics",
+        "save_concat_input_manifest",
+        "save_run_summary",
+        "setup_logging",
+        "update_active_state",
+        "update_current_session",
+        "update_latest_run"
+      ],
+      "module": "videovaudio/storage/atomic.py"
+    },
+    "atomic_write_text": {
+      "class": "AtomicStorageMixin",
+      "line_start": 79,
+      "line_end": 92,
+      "loc": 14,
+      "doc": "Атомарно сохраняет небольшой текстовый служебный файл.",
+      "calls": [
+        "atomic_replace_with_retry",
+        "cleanup_own_atomic_temp"
+      ],
+      "called_by": [
+        "append_health_record",
+        "begin_run_diagnostics",
+        "save_run_summary",
+        "write_schema_guide"
+      ],
+      "module": "videovaudio/storage/atomic.py"
+    },
+    "read_json_file": {
+      "class": "AtomicStorageMixin",
+      "line_start": 94,
+      "line_end": 101,
+      "loc": 8,
+      "doc": "Безопасно читает JSON, возвращая пустой словарь при повреждении.",
+      "calls": [],
+      "called_by": [
+        "setup_logging"
+      ],
+      "module": "videovaudio/storage/atomic.py"
+    },
+    "write_schema_guide": {
+      "class": "LoggingSetupMixin",
+      "line_start": 26,
+      "line_end": 83,
+      "loc": 58,
+      "doc": "Пишет стабильную краткую карту диагностических файлов для Codex.",
+      "calls": [
+        "atomic_write_text"
+      ],
+      "called_by": [
+        "setup_logging"
+      ],
+      "module": "videovaudio/storage/logging_setup.py"
+    },
+    "setup_logging": {
+      "class": "LoggingSetupMixin",
+      "line_start": 85,
+      "line_end": 332,
+      "loc": 248,
+      "doc": "Создаёт компактные логи проблем рядом с программой.",
+      "calls": [
+        "atomic_write_json",
+        "cleanup_old_problem_logs",
+        "cleanup_stale_atomic_temp_files",
+        "cleanup_unreferenced_process_logs",
+        "compress_old_detailed_logs",
+        "get_runtime_context",
+        "now_iso",
+        "read_json_file",
+        "update_active_state",
+        "update_current_session",
+        "utc_now_iso",
+        "write_problem",
+        "write_schema_guide"
+      ],
+      "called_by": [
+        "__init__"
+      ],
+      "module": "videovaudio/storage/logging_setup.py"
+    },
+    "compress_old_detailed_logs": {
+      "class": "LogMaintenanceMixin",
+      "line_start": 26,
+      "line_end": 104,
+      "loc": 79,
+      "doc": "Сжимает старые подробные текстовые логи, сохраняя имена ссылок через .gz.",
+      "calls": [],
+      "called_by": [
+        "setup_logging"
+      ],
+      "module": "videovaudio/storage/maintenance.py"
+    },
+    "is_process_running": {
+      "class": "LogMaintenanceMixin",
+      "line_start": 106,
+      "line_end": 160,
+      "loc": 55,
+      "doc": "Без сторонних зависимостей проверяет, существует ли процесс.",
+      "calls": [],
+      "called_by": [
+        "cleanup_stale_atomic_temp_files"
+      ],
+      "module": "videovaudio/storage/maintenance.py"
+    },
+    "cleanup_stale_atomic_temp_files": {
+      "class": "LogMaintenanceMixin",
+      "line_start": 162,
+      "line_end": 215,
+      "loc": 54,
+      "doc": "Удаляет старые временные active-state файлы только мёртвых процессов.",
+      "calls": [
+        "is_process_running"
+      ],
+      "called_by": [
+        "setup_logging"
+      ],
+      "module": "videovaudio/storage/maintenance.py"
+    },
+    "cleanup_old_problem_logs": {
+      "class": "LogMaintenanceMixin",
+      "line_start": 217,
+      "line_end": 266,
+      "loc": 50,
+      "doc": "Удаляет только журналы этой программы старше 120 дней.",
+      "calls": [],
+      "called_by": [
+        "setup_logging"
+      ],
+      "module": "videovaudio/storage/maintenance.py"
+    },
+    "collect_referenced_process_logs": {
+      "class": "LogMaintenanceMixin",
+      "line_start": 268,
+      "line_end": 298,
+      "loc": 31,
+      "doc": "Находит process-log, на которые ссылаются реальные проблемные события.",
+      "calls": [],
+      "called_by": [
+        "cleanup_unreferenced_process_logs"
+      ],
+      "module": "videovaudio/storage/maintenance.py"
+    },
+    "cleanup_unreferenced_process_logs": {
+      "class": "LogMaintenanceMixin",
+      "line_start": 300,
+      "line_end": 337,
+      "loc": 38,
+      "doc": "Удаляет старые логи успешных процессов, оставляя детали реальных проблем.",
+      "calls": [
+        "collect_referenced_process_logs"
+      ],
+      "called_by": [
+        "setup_logging"
+      ],
+      "module": "videovaudio/storage/maintenance.py"
+    },
+    "natural_sort_key": {
+      "class": "MediaScanMixin",
+      "line_start": 26,
+      "line_end": 29,
+      "loc": 4,
+      "doc": "Естественная сортировка: 1, 2, 10 вместо 1, 10, 2.",
+      "calls": [],
+      "called_by": [],
+      "module": "videovaudio/storage/media_scan.py"
+    },
+    "scan_media_files": {
+      "class": "MediaScanMixin",
+      "line_start": 31,
+      "line_end": 125,
+      "loc": 95,
+      "doc": "Сканирует видео и отдельно сообщает ошибки чтения.",
+      "calls": [
+        "normalize_folder_path",
+        "write_problem"
+      ],
+      "called_by": [
+        "_add_folder_to_queue",
+        "get_files",
+        "process_single_folder",
+        "process_video_folder"
+      ],
+      "module": "videovaudio/storage/media_scan.py"
+    },
+    "get_files": {
+      "class": "MediaScanMixin",
+      "line_start": 127,
+      "line_end": 132,
+      "loc": 6,
+      "doc": "Возвращает видео для интерфейса без записи диагностических событий.",
+      "calls": [
+        "scan_media_files"
+      ],
+      "called_by": [
+        "update_queue_display"
+      ],
+      "module": "videovaudio/storage/media_scan.py"
+    },
+    "get_tool_version": {
+      "class": "RuntimeContextMixin",
+      "line_start": 26,
+      "line_end": 44,
+      "loc": 19,
+      "doc": "Читает только первую строку версии без создания отдельного process-log.",
+      "calls": [],
+      "called_by": [
+        "get_runtime_context"
+      ],
+      "module": "videovaudio/storage/runtime.py"
+    },
+    "get_source_identity": {
+      "class": "RuntimeContextMixin",
+      "line_start": 46,
+      "line_end": 118,
+      "loc": 73,
+      "doc": "Хэширует весь модульный source tree, чтобы build_id менялся вместе с кодом.",
+      "calls": [
+        "sha256_file"
+      ],
+      "called_by": [
+        "get_runtime_context"
+      ],
+      "module": "videovaudio/storage/runtime.py"
+    },
+    "get_runtime_context": {
+      "class": "RuntimeContextMixin",
+      "line_start": 120,
+      "line_end": 167,
+      "loc": 48,
+      "doc": "",
+      "calls": [
+        "get_source_identity",
+        "get_tool_version"
+      ],
+      "called_by": [
+        "setup_logging"
+      ],
+      "module": "videovaudio/storage/runtime.py"
+    },
+    "get_log_storage_stats": {
+      "class": "RuntimeContextMixin",
+      "line_start": 169,
+      "line_end": 220,
+      "loc": 52,
+      "doc": "",
+      "calls": [],
+      "called_by": [
+        "build_health_record",
+        "save_run_summary"
+      ],
+      "module": "videovaudio/storage/runtime.py"
+    },
+    "show_completion_notification": {
+      "class": "UIMixin",
+      "line_start": 14,
+      "line_end": 18,
+      "loc": 5,
+      "doc": "Показать постоянное уведомление; вызывается из UI-потока.",
+      "calls": [],
+      "called_by": [
+        "done"
+      ],
+      "module": "videovaudio/ui.py"
+    },
+    "create_interface": {
+      "class": "UIMixin",
+      "line_start": 20,
+      "line_end": 262,
+      "loc": 243,
+      "doc": "",
+      "calls": [],
+      "called_by": [
+        "__init__"
+      ],
+      "module": "videovaudio/ui.py"
+    },
+    "ui_after": {
+      "class": "UIMixin",
+      "line_start": 264,
+      "line_end": 275,
+      "loc": 12,
+      "doc": "Безопасно планирует действие в Tkinter, даже если окно уже закрывается.",
+      "calls": [],
+      "called_by": [
+        "log_message",
+        "process_queue",
+        "process_single_folder",
+        "process_video_folder",
+        "process_video_queue",
+        "set_status",
+        "update_progress"
+      ],
+      "module": "videovaudio/ui.py"
+    },
+    "log_message": {
+      "class": "UIMixin",
+      "line_start": 277,
+      "line_end": 291,
+      "loc": 15,
+      "doc": "Пишет сообщение в окно; повторяющиеся успехи можно не сохранять в файл.",
+      "calls": [
+        "ui_after"
+      ],
+      "called_by": [
+        "_add_folder_to_queue",
+        "_clear_queue",
+        "_remove_duplicates",
+        "_remove_selected_from_queue",
+        "_split_file_into_stage",
+        "create_video_group_output",
+        "process_queue",
+        "process_single_folder",
+        "process_video_folder",
+        "process_video_queue",
+        "request_cancel",
+        "start",
+        "start_video_merge"
+      ],
+      "module": "videovaudio/ui.py"
+    },
+    "set_status": {
+      "class": "UIMixin",
+      "line_start": 293,
+      "line_end": 294,
+      "loc": 2,
+      "doc": "",
+      "calls": [
+        "ui_after"
+      ],
+      "called_by": [
+        "done",
+        "process_single_folder",
+        "process_video_folder",
+        "request_cancel",
+        "start",
+        "start_video_merge"
+      ],
+      "module": "videovaudio/ui.py"
+    },
+    "update_progress": {
+      "class": "UIMixin",
+      "line_start": 296,
+      "line_end": 297,
+      "loc": 2,
+      "doc": "",
+      "calls": [
+        "ui_after"
+      ],
+      "called_by": [
+        "_split_file_into_stage",
+        "done",
+        "process_single_folder",
+        "process_video_folder"
+      ],
+      "module": "videovaudio/ui.py"
+    },
+    "process_video_folder": {
+      "class": "VideoFolderWorkflowMixin",
+      "line_start": 16,
+      "line_end": 369,
+      "loc": 354,
+      "doc": "Объединяет один курс в проверенные MP4-части до 10 часов.",
+      "calls": [
+        "build_video_groups",
+        "choose_video_target_profile",
+        "create_video_group_output",
+        "format_duration",
+        "get_video_info",
+        "log_message",
+        "normalize_folder_path",
+        "now_iso",
+        "publish_video_outputs",
+        "safe_log_fragment",
+        "scan_media_files",
+        "set_status",
+        "split_long_video_to_outputs",
+        "ui_after",
+        "update_active_state",
+        "update_progress",
+        "write_problem"
+      ],
+      "called_by": [
+        "process_video_queue"
+      ],
+      "module": "videovaudio/video/folder_workflow.py"
+    },
+    "concat_video_files_copy": {
+      "class": "VideoOperationsMixin",
+      "line_start": 16,
+      "line_end": 46,
+      "loc": 31,
+      "doc": "Быстро склеивает уже совместимые MP4 без потери качества.",
+      "calls": [
+        "escape_concat_path",
+        "ffmpeg_base_command",
+        "run_process",
+        "safe_log_fragment"
+      ],
+      "called_by": [
+        "create_video_group_output"
+      ],
+      "module": "videovaudio/video/operations.py"
+    },
+    "normalize_video_file": {
+      "class": "VideoOperationsMixin",
+      "line_start": 48,
+      "line_end": 88,
+      "loc": 41,
+      "doc": "Нормализует один ролик и проверяет, что его содержимое не потеряно.",
+      "calls": [
+        "build_video_normalize_command",
+        "run_process",
+        "validate_merged_video",
+        "write_problem"
+      ],
+      "called_by": [
+        "create_video_group_output"
+      ],
+      "module": "videovaudio/video/operations.py"
+    },
+    "create_video_group_output": {
+      "class": "VideoOperationsMixin",
+      "line_start": 90,
+      "line_end": 224,
+      "loc": 135,
+      "doc": "Создаёт одну часть: copy при совместимости, иначе нормализация.",
+      "calls": [
+        "concat_video_files_copy",
+        "log_message",
+        "mark_problem_recovered",
+        "mark_problem_unresolved",
+        "normalize_video_file",
+        "validate_merged_video",
+        "video_group_can_copy",
+        "write_problem"
+      ],
+      "called_by": [
+        "process_video_folder"
+      ],
+      "module": "videovaudio/video/operations.py"
+    },
+    "split_long_video_to_outputs": {
+      "class": "VideoOperationsMixin",
+      "line_start": 226,
+      "line_end": 318,
+      "loc": 93,
+      "doc": "Перекодирует одиночное видео длиннее лимита сразу в части ≤10 часов.",
+      "calls": [
+        "build_video_normalize_command",
+        "duration_mismatch",
+        "get_video_info",
+        "run_process",
+        "validate_merged_video",
+        "write_problem"
+      ],
+      "called_by": [
+        "process_video_folder"
+      ],
+      "module": "videovaudio/video/operations.py"
+    },
+    "build_video_groups": {
+      "class": "VideoOperationsMixin",
+      "line_start": 320,
+      "line_end": 343,
+      "loc": 24,
+      "doc": "Укладывает целые уроки в части до 10 часов без разреза между кадрами.",
+      "calls": [],
+      "called_by": [
+        "process_video_folder"
+      ],
+      "module": "videovaudio/video/operations.py"
+    },
+    "publish_video_outputs": {
+      "class": "VideoOperationsMixin",
+      "line_start": 345,
+      "line_end": 395,
+      "loc": 51,
+      "doc": "Публикует только проверенный полный набор с rollback старых частей.",
+      "calls": [
+        "atomic_replace_with_retry"
+      ],
+      "called_by": [
+        "process_video_folder"
+      ],
+      "module": "videovaudio/video/operations.py"
+    },
+    "parse_frame_rate": {
+      "class": "VideoProfileMixin",
+      "line_start": 16,
+      "line_end": 29,
+      "loc": 14,
+      "doc": "Преобразует ffprobe-частоту вида 30000/1001 в число.",
+      "calls": [],
+      "called_by": [
+        "choose_video_target_profile"
+      ],
+      "module": "videovaudio/video/profile.py"
+    },
+    "get_video_info": {
+      "class": "VideoProfileMixin",
+      "line_start": 31,
+      "line_end": 170,
+      "loc": 140,
+      "doc": "Читает длительность и параметры первого видео/аудиопотока.",
+      "calls": [
+        "extract_ffprobe_json",
+        "run_process",
+        "write_problem"
+      ],
+      "called_by": [
+        "process_video_folder",
+        "split_long_video_to_outputs",
+        "validate_merged_video"
+      ],
+      "module": "videovaudio/video/profile.py"
+    },
+    "video_stream_copy_key": {
+      "class": "VideoProfileMixin",
+      "line_start": 172,
+      "line_end": 188,
+      "loc": 17,
+      "doc": "Параметры, которые должны совпасть для безопасной быстрой склейки.",
+      "calls": [],
+      "called_by": [
+        "video_group_can_copy"
+      ],
+      "module": "videovaudio/video/profile.py"
+    },
+    "video_group_can_copy": {
+      "class": "VideoProfileMixin",
+      "line_start": 190,
+      "line_end": 204,
+      "loc": 15,
+      "doc": "Разрешает copy только для одинаковых, интернет-совместимых MP4-потоков.",
+      "calls": [
+        "video_stream_copy_key"
+      ],
+      "called_by": [
+        "create_video_group_output"
+      ],
+      "module": "videovaudio/video/profile.py"
+    },
+    "choose_video_target_profile": {
+      "class": "VideoProfileMixin",
+      "line_start": 206,
+      "line_end": 251,
+      "loc": 46,
+      "doc": "Формирует единый профиль из настроек и частоты кадров курса.",
+      "calls": [
+        "parse_frame_rate"
+      ],
+      "called_by": [
+        "process_video_folder"
+      ],
+      "module": "videovaudio/video/profile.py"
+    },
+    "video_filter_for_target": {
+      "class": "VideoProfileMixin",
+      "line_start": 253,
+      "line_end": 262,
+      "loc": 10,
+      "doc": "",
+      "calls": [],
+      "called_by": [
+        "build_video_normalize_command"
+      ],
+      "module": "videovaudio/video/profile.py"
+    },
+    "build_video_normalize_command": {
+      "class": "VideoProfileMixin",
+      "line_start": 264,
+      "line_end": 313,
+      "loc": 50,
+      "doc": "Строит единый H.264/AAC профиль, добавляя тишину при отсутствии звука.",
+      "calls": [
+        "ffmpeg_base_command",
+        "video_filter_for_target"
+      ],
+      "called_by": [
+        "normalize_video_file",
+        "split_long_video_to_outputs"
+      ],
+      "module": "videovaudio/video/profile.py"
+    },
+    "validate_merged_video": {
+      "class": "VideoProfileMixin",
+      "line_start": 315,
+      "line_end": 369,
+      "loc": 55,
+      "doc": "Проверяет контейнер, кодеки, длительность и лимит готовой части.",
+      "calls": [
+        "duration_mismatch",
+        "get_video_info"
+      ],
+      "called_by": [
+        "create_video_group_output",
+        "normalize_video_file",
+        "split_long_video_to_outputs"
+      ],
+      "module": "videovaudio/video/profile.py"
+    }
+  }
+}

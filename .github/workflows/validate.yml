@@ -1,0 +1,36 @@
+name: Validate Python source
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**/*.py'
+      - 'docs/CODE_INDEX.md'
+      - 'docs/CODE_MAP.json'
+      - 'AGENTS.md'
+      - '.github/workflows/validate.yml'
+  pull_request:
+    paths:
+      - '**/*.py'
+      - 'docs/CODE_INDEX.md'
+      - 'docs/CODE_MAP.json'
+      - 'AGENTS.md'
+      - '.github/workflows/validate.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify architecture and imports
+        run: python tools/verify_project.py
+      - name: Test run lifecycle
+        run: python -B tools/test_audio_run_regressions.py
+      - name: Test completion notifications (headless)
+        run: python -B tools/test_completion_notification.py
