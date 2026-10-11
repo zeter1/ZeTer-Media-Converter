@@ -1,0 +1,150 @@
+name: Build and release Windows EXE
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      # Bootstrap the first release on introducing this workflow.
+      # Ordinary source/docs pushes must never publish a release.
+      - '.github/workflows/build-windows.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: windows-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify architecture, run lifecycle, and notifications
+        shell: pwsh
+        run: |
+          python -B tools/verify_project.py
+          if ($LASTEXITCODE -ne 0) { throw "Architecture verification failed" }
+          python -B tools/test_audio_run_regressions.py
+          if ($LASTEXITCODE -ne 0) { throw "Lifecycle tests failed" }
+          python -B tools/test_completion_notification.py
+          if ($LASTEXITCODE -ne 0) { throw "Notification tests failed" }
+      - name: Download pinned FFmpeg 9.0.2 and verify SHA256
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $uri = "https://www.gyan.dev/ffmpeg/builds/packages/ffmpeg-9.0.2-essentials_build.zip"
+          $archive = Join-Path $env:RUNNER_TEMP "ffmpeg-9.0.2-essentials_build.zip"
+          Invoke-WebRequest -Uri $uri -OutFile $archive
+          $actual = (Get-FileHash -LiteralPath $archive -Algorithm SHA256).Hash.ToLowerInvariant()
+          $expected = "60f467265b1e312373dbcd92200c2618a74850f98d3d078e94296bb3fa2047ba"
+          if ($actual -ne $expected) { throw "FFmpeg archive SHA256 mismatch: $actual" }
+          $unpack = Join-Path $env:RUNNER_TEMP "ffmpeg-9.0.2"
+          Expand-Archive -LiteralPath $archive -DestinationPath $unpack
+          $ffmpeg = Get-ChildItem -Path $unpack -Recurse -File -Filter ffmpeg.exe | Select-Object -First 1
+          if (-not $ffmpeg) { throw "ffmpeg.exe missing from verified FFmpeg archive" }
+          $probe = Join-Path $ffmpeg.DirectoryName "ffprobe.exe"
+          if (-not (Test-Path -LiteralPath $probe)) { throw "ffprobe.exe missing" }
+          Add-Content -Path $env:GITHUB_PATH -Value $ffmpeg.DirectoryName
+          Add-Content -Path $env:GITHUB_ENV -Value "FFMPEG_DIR=$($ffmpeg.DirectoryName)"
+          & $ffmpeg.FullName -version | Select-Object -First 2
+          & $probe -version | Select-Object -First 2
+      - name: Run FFmpeg audio regression tests
+        shell: pwsh
+        run: |
+          python -B tools/test_audio_regressions.py
+          if ($LASTEXITCODE -ne 0) { throw "Audio regression tests failed" }
+      - name: Install pinned PyInstaller
+        shell: pwsh
+        run: |
+          python -m pip install --disable-pip-version-check "pyinstaller==6.22.3"
+          if ($LASTEXITCODE -ne 0) { throw "PyInstaller installation failed" }
+      - name: Build standalone Windows executable
+        shell: pwsh
+        run: |
+          $ffmpeg = Join-Path $env:FFMPEG_DIR "ffmpeg.exe"
+          $ffprobe = Join-Path $env:FFMPEG_DIR "ffprobe.exe"
+          $pyiArgs = @(
+            "--noconfirm", "--clean", "--onefile", "--windowed",
+            "--name", "ZeTer-Media-Converter",
+            "--runtime-hook", "packaging/runtime_ffmpeg_path.py",
+            "--add-binary", "$ffmpeg;.",
+            "--add-binary", "$ffprobe;.",
+            "ZeTer Media Converter.py"
+          )
+          python -m PyInstaller @pyiArgs
+          if ($LASTEXITCODE -ne 0) { throw "PyInstaller build failed" }
+      - name: Smoke-test frozen EXE and bundled FFmpeg
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $exe = Join-Path (Get-Location) "dist/ZeTer-Media-Converter.exe"
+          if (-not (Test-Path -LiteralPath $exe)) { throw "Built EXE is missing" }
+          if ((Get-Item -LiteralPath $exe).Length -lt 1000000) { throw "Built EXE is implausibly small" }
+          $process = Start-Process -FilePath $exe -ArgumentList "--verify-bundle" -PassThru
+          try {
+            $process | Wait-Process -Timeout 120 -ErrorAction Stop
+          } catch {
+            Stop-Process -Id $process.Id -Force -ErrorAction SilentlyContinue
+            throw "Frozen EXE smoke check timed out"
+          }
+          $process.Refresh()
+          if ($process.ExitCode -ne 0) { throw "Frozen EXE smoke check failed with code $($process.ExitCode)" }
+          Write-Host "PASS: frozen binary imports and bundled FFmpeg/FFprobe"
+      - name: Prepare binary, SHA256, and third-party licensing
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          New-Item -ItemType Directory -Path release -Force | Out-Null
+          Copy-Item -LiteralPath "dist/ZeTer-Media-Converter.exe" -Destination "release/ZeTer-Media-Converter.exe"
+          Copy-Item -LiteralPath "packaging/THIRD_PARTY_NOTICES.txt" -Destination "release/THIRD_PARTY_NOTICES.txt"
+          Invoke-WebRequest -Uri "https://www.gnu.org/licenses/gpl-3.0.txt" -OutFile "release/GPL-3.0-FFmpeg.txt"
+          if ((Get-Item "release/GPL-3.0-FFmpeg.txt").Length -lt 25000) { throw "GPLv3 license text is incomplete" }
+          $hash = (Get-FileHash "release/ZeTer-Media-Converter.exe" -Algorithm SHA256).Hash.ToLowerInvariant()
+          Set-Content -LiteralPath "release/ZeTer-Media-Converter.exe.sha256" -Encoding ascii -Value "$hash  ZeTer-Media-Converter.exe"
+          Write-Host "Windows EXE size: $((Get-Item 'release/ZeTer-Media-Converter.exe').Length) bytes"
+          Write-Host "Windows EXE SHA256: $hash"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ZeTer-Media-Converter-v3.3.5-win64
+          path: release/*
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 0
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: ZeTer-Media-Converter-v3.3.5-win64
+          path: release
+      - name: Validate downloaded assets and publish v3.3.5
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          cd release
+          sha256sum --check ZeTer-Media-Converter.exe.sha256
+          test -s THIRD_PARTY_NOTICES.txt
+          test -s GPL-3.0-FFmpeg.txt
+          cd ..
+          tag="v3.3.5"
+          if gh release view "$tag" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "Release $tag already exists; refusing to replace published binaries."
+            exit 1
+          fi
+          gh release create "$tag" release/ZeTer-Media-Converter.exe release/ZeTer-Media-Converter.exe.sha256 release/THIRD_PARTY_NOTICES.txt release/GPL-3.0-FFmpeg.txt \
+            --repo "$GITHUB_REPOSITORY" \
+            --target "$GITHUB_SHA" \
+            --title "ZeTer Media Converter 3.3.5 — Windows x64" \
+            --notes "Первый Windows EXE программы. Один исполняемый файл для Windows 10/11 x64, со встроенными FFmpeg и FFprobe 9.0.2. Исходники: $GITHUB_SHA. Сборка: PyInstaller 6.22.3 + Python 3.12. Перед публикацией проверены Python tests, FFmpeg regressions, SHA256 скачанного FFmpeg и headless-запуск frozen EXE. Полный UI и реальные большие медиафайлы требуют ручной проверки. Бинарник не подписан цифровой подписью. Сведения о стороннем ПО и лицензиях — в приложенных файлах."

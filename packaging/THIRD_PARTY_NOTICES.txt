@@ -1,0 +1,22 @@
+ZeTer Media Converter 3.3.5 — Third-party notices
+=================================================
+FFmpeg and FFprobe 9.0.2 (Windows x64, essentials_build), distributed
+by Gyan Doshi at https://www.gyan.dev/ffmpeg/builds/
+
+FFmpeg builds used here are licensed under GPLv3 (see accompanying
+GPL-3.0-FFmpeg.txt). The FFmpeg source is available from:
+https://github.com/FFmpeg/FFmpeg/tree/n9.0.2
+Source of the exact upstream build:
+https://github.com/FFmpeg/FFmpeg/commit/946fcce07b
+The pinned archive from gyan.dev has SHA256:
+60f467265b1e312373dbcd92200c2618a74850f98d3d078e94296bb3fa2047ba
+
+The EXE also includes the CPython 3.12 runtime, Tcl/Tk and PyInstaller
+bootloader/runtime. Their respective license notices and redistribution
+terms are available from the upstream Python and PyInstaller distributions.
+
+The GPL notice here applies to the bundled FFmpeg/FFprobe components.
+For source provenance and build instructions for the complete application,
+see https://github.com/zeter1/ZeTer-Media-Converter
+
+This software is provided without code signing.
