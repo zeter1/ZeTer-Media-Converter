@@ -147,7 +147,7 @@ python -B tools/test_audio_regressions.py  # требуется FFmpeg/FFprobe �
 
 **Версии и обновления:** [Releases](https://github.com/zeter1/ZeTer-Media-Converter/releases) · [CHANGELOG.md](CHANGELOG.md). **Ошибки и предложения:** [Issues](https://github.com/zeter1/ZeTer-Media-Converter/issues).
 
-## Контакты для связи
+## Контакты для связи с разработчиком.
 
 - **Email:** [zeter11@gmail.com](mailto:zeter11@gmail.com)
 - **Telegram:** [@zeter1](https://t.me/zeter1)
