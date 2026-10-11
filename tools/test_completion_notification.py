@@ -54,7 +54,11 @@ class CompletionTests(unittest.TestCase):
         from videovaudio import notifications
         with patch.object(notifications.subprocess, 'Popen') as launch:
             notifications.reveal_file(str(self.file))
-        self.assertEqual(launch.call_args.args[0][-1], str(self.file))
+        selected_path = Path(launch.call_args.args[0][-1])
+        # Windows can expand an 8.3 temp path (RUNNER~1) during resolve().
+        # Explorer must select the same file, not preserve the path spelling.
+        self.assertTrue(selected_path.samefile(self.file))
+        self.assertEqual(selected_path.name, self.file.name)
         self.assertEqual(launch.call_args.args[0][-2], '/select,')
         self.assertFalse(launch.call_args.kwargs.get('shell', False))
 
