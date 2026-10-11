@@ -149,14 +149,14 @@ python -B tools/test_audio_regressions.py  # требуется FFmpeg/FFprobe �
 
 ## Контакты для связи с разработчиком.
 
-- **Email:** [zeter11@gmail.com](mailto:zeter11@gmail.com)
-- **Telegram:** [@zeter1](https://t.me/zeter1)
-- **LinkedIn:** [linkedin.com/in/zeter](https://www.linkedin.com/in/zeter/)
-- **Facebook:** [facebook.com/zeter1](https://www.facebook.com/zeter1)
-- **ВКонтакте:** [vk.ru/zeter1](https://vk.ru/zeter1)
-- **Instagram:** [@zeter1992](https://www.instagram.com/zeter1992/)
-- **TenChat:** [tenchat.ru/zeter](https://tenchat.ru/zeter)
-- **X (Twitter):** [@zeter1](https://x.com/zeter1)
-- **Threads:** [@zeter1992](https://www.threads.com/@zeter1992)
-- **Одноклассники:** [ok.ru/zeter1](https://ok.ru/zeter1)
-- **Telegram-группа (проекты и общение):** [@zeterchat](https://t.me/zeterchat)
+- zeter11@gmail.com
+- https://t.me/zeter1
+- https://www.linkedin.com/in/zeter/
+- https://www.facebook.com/zeter1
+- https://vk.ru/zeter1
+- https://www.instagram.com/zeter1992/
+- https://tenchat.ru/zeter
+- https://x.com/zeter1
+- https://www.threads.com/@zeter1992
+- https://ok.ru/zeter1
+- https://t.me/zeterchat — Telegram-группа: обо мне, проекты и чат
